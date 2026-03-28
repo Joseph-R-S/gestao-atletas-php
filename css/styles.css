@@ -1,0 +1,132 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.titulo{
+    width: 100%;
+    background-color: aliceblue;
+    height: 75px;
+    text-align: left;
+    padding-top: 15px;
+}
+
+.campo{
+    padding:10px;
+    width:300px;
+}
+
+.campo label, .input-container label{
+    font-size:12px;
+    color:#777;
+    display:block;
+    margin-bottom:4px;
+    
+}
+
+.campo  label span{
+    color:red;
+}
+
+.campo input{
+    width:100%;
+    border:none;
+    border-bottom:2px solid #ccc;
+    background:transparent;
+    font-size:14px;
+    padding:4px 0;
+    outline:none;
+}
+
+.campo input:focus{
+    border-bottom:2px solid #1976d2;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px; 
+  padding: 10px;
+}
+
+.input-container label span{
+    color:red;
+}
+
+.input-container select {
+  width: 100%;
+  padding: 10px 5px 5px 5px;
+  border: none;
+  border-bottom: 1px solid #ccc; /* A linha cinza embaixo */
+  background-color: transparent;
+  font-size: 16px;
+  color: #333;
+  appearance: none; /* Remove a seta padrão em alguns browsers */
+  outline: none;
+  cursor: pointer;
+
+}
+
+.input-container::after {
+  content: '▼';
+  font-size: 10px;
+  color: #666;
+  position: absolute;
+  right: 15px;
+  bottom: 20px;
+  pointer-events: none;
+
+}
+
+.input-container select:focus {
+  border-bottom: 2px solid #007bff; /* Linha muda de cor no foco */
+  transition: border-bottom 0.2s ease;
+}
+
+.campo > input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input-textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    min-height: 80px;
+    outline: none;
+    resize: vertical;
+}
+
+.input-textarea:focus {
+    border: 2px solid #1976d2;
+}
+
+.btn-salvar {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-salvar:hover {
+    background-color: #45a049;
+}
