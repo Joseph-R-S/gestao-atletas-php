@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>{% block title %}Gestão Atletas{% endblock %}</title>
+</head>
+<body>
+    <header class="topo">
+        <nav class="navigation-left">
+            <button><a href="index.php?class=AtletaList">Lista de Atletas</a> </button> 
+            <button> <a href="index.php?class=AtletaForm">Novo Atleta</a> </button>
+        </nav>
+    </header>
+
+    <div class="conteudo">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="rodape">
+        <p>&copy; 2026 - Gestão de Atletas - Várzea Grande/MT</p>
+    </footer>
+</body>
+</html>

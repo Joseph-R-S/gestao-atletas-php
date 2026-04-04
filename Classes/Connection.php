@@ -1,5 +1,5 @@
 <?php
-class Conection
+class Connection
 {
     private static ?PDO $conn;
 
@@ -9,7 +9,7 @@ class Conection
         {
             if(empty(self::$conn))
             {
-                $ini = parse_ini_file('config/config.ini');
+                $ini = parse_ini_file(__DIR__ . '/../config/config.ini');
 
                 $dsn = "pgsql:host={$ini['host']};port={$ini['port']};dbname={$ini['dbname']}";
                 

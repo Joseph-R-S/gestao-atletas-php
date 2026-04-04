@@ -1,5 +1,5 @@
 <?php
-require_once 'Conection.php';
+require_once 'Connection.php';
 
 class Atleta
 {
@@ -7,7 +7,7 @@ class Atleta
     {
         try
         {
-            $conn = Conection::open();
+            $conn = Connection::open();
 
             $params = [
                 ':nome_completo'    => $atleta['nome_completo'],
@@ -45,7 +45,7 @@ class Atleta
     {
         try
         {
-            $conn = Conection::open();
+            $conn = Connection::open();
             $result = $conn->prepare("SELECT * FROM atletas WHERE id=:id");
             $result->bindParam(':id', $id, PDO::PARAM_INT); 
             $result->execute();
@@ -61,7 +61,7 @@ class Atleta
     {
         try 
         {
-            $conn = Conection::open();
+            $conn = Connection::open();
             $result = $conn->prepare("DELETE FROM atletas WHERE id = :id");
             return $result->execute([':id' => $id]);
         } catch (PDOException $e) {
@@ -73,7 +73,7 @@ class Atleta
     {
         try 
         {
-            $conn = Conection::open();
+            $conn = Connection::open();
             $result = $conn->query("SELECT * FROM atletas ORDER BY id");
             return $result->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {

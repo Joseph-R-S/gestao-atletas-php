@@ -1,4 +1,8 @@
 /vendor/
+/config/config.ini
 .env
 .vscode/
 *.log
+.DS_Store
+Thumbs.db
+/templates/cache/
