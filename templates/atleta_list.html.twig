@@ -1,41 +1,46 @@
 {% extends "layout.html.twig" %}
-{% block title %}Lista - Gestão de Atletas{% endblock %}
+{% block title %}Lista - Gestão de Atletas
+{% endblock %}
 
 {% block content %}
-    <div class="titulo-pagina">
-        <h2>Atletas Cadastrados</h2>
-    </div>
-    <table border='1'>
-        <thead>
-            <tr>
-                <th></th>
-                <th></th>
-                <th>ID</th>
-                <th>Nome Completo</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for atleta in atletas %}
-            <tr>
-                <td>
-                    <a href="index.php?class=AtletaForm&method=edit&id={{ atleta.id }}">Editar
-                    </a>
-                </td>
-                <td>
-                    <a href="index.php?class=AtletaList&method=delete&id={{ atleta.id }}" 
-                       onclick="return confirm('Deseja excluir?')">Excluir
-                       </a>
-                </td>
-                <td>{{ atleta.id }}</td>
-                <td>{{ atleta.nome_completo }}</td>
-                <td>{{ atleta.email }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="4">Nenhum atleta cadastrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+	<div class="titulo-pagina">
+		<h2>Atletas Cadastrados</h2>
+	</div>
+	<table border='1'>
+		<thead>
+			<tr>
+				<th></th>
+				<th></th>
+				<th>ID</th>
+				<th>Nome Completo</th>
+				<th>Email</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for atleta in atletas %}
+				<tr>
+					<td>
+						<a href="index.php?class=AtletaForm&method=edit&id={{ atleta.id }}">Editar
+						</a>
+					</td>
+					<td>
+						<a href="index.php?class=AtletaList&method=delete&id={{ atleta.id }}" onclick="return confirm('Deseja excluir?')">Excluir
+						</a>
+					</td>
+					<td>{{ atleta.id }}</td>
+					<td>{{ atleta.nome_completo }}</td>
+					<td>{{ atleta.email }}</td>
+					<td>
+						<a href="index.php?class=AvaliacaoForm&method=show&atleta_id={{ atleta.id }}" class="btn-avaliacao">
+							Avaliar
+						</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="4">Nenhum atleta cadastrado.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock %}

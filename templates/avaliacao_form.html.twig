@@ -1,46 +1,143 @@
 {% extends "layout.html.twig" %}
-{% block title %}Dados de Atleta Para TMB
+{% block title %}Dados de Atleta Para avaliação
 {% endblock %}
 
 {% block content %}
-	{{ dump(atleta) }}
-	{#
-	<form method="POST" action="index.php?class=AvalicaoForm&method=edit&id={{ atleta.id }}">
-	    <input type="hidden" name="id" value="{id}">
-	
-	    <div class="campo">
-	        <label>Atleta</label>
-	        <input type="text" name="atleta" value="{nome_completo}" required readonly>
-	    </div>
-	
-	    <div class="campo">
-	        <label>Peso (kg) <span>*</span></label>
-	        <input type="number" step="0.01" name="peso" value="{peso}" required>
-	    </div>
-	
-	    <div class="campo">
-	        <label>Altura (m) <span>*</span></label>
-	        <input type="number" step="0.01" name="altura" value="{altura}" required>
-	    </div>
-	
-	    <div class="campo">
-	        <label>Meta Específica</label>
-	        <textarea name="meta_especifica" class="input-textarea">{meta_especifica}</textarea>
-	    </div>
-	
-	    <div class="campo">
-	        <label for="intensidade">Intensidade (1 a 10):</label>
-	        <input type="number" name="intensidade" min="1" max="10" value="{{ avaliacao.intensidade }}">
-	    </div>
-	
-        <div class="campo">
-            <label for="dias_treino_semana">Dias de treino por semana:</label>
-            <input type="number" name="dias_treino_semana" min="0" max="7" value="{{ avaliacao.dias_treino_semana }}">
-        </div>
-	
-	    <div class="campo">
-	        <button type="submit" class="btn-salvar">Salvar</button>
-	    </div>
+	{% if mensagem_sucesso %}
+		<div style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #c3e6cb;">
+			{{ mensagem_sucesso }}
+		</div>
+	{% endif %}
+
+	{% if mensagem_erro %}
+		<div style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #f5c6cb;">
+			{{ mensagem_erro }}
+		</div>
+	{% endif %}
+
+	<header class="navbar-top">
+
+		<button class="hamburguer-button" aria-label="Abrir menu de navegação" aria-expanded="false">
+			<div class="hamburguer-icon">
+				<span class="linha"></span>
+				<span class="linha"></span>
+				<span class="linha"></span>
+			</div>
+			<span class="label-menu">MENU</span>
+		</button>
+
+		<div class="user-info">
+			({{atleta.id}})
+			{{atleta.nome_completo}}
+		</div>
+
+		<button class="actions-button" aria-label="Abrir menu de ações">
+			<span class="icon-arrow"></span>
+			<span class="label-actions">AÇÕES</span>
+		</button>
+
+	</header>
+	<form class="fomulario" method="POST" action="index.php?class=AvaliacaoForm&method=save" enctype="multipart/form-data">
+		<input
+		type="hidden" name="atleta_id" value="{{atleta.id}}">
+
+		{#Objetivo tem que carregar da tabela objetivo?#}
+		<div class="input-container">
+			<label for="objetivo_id">Objetivo:</label>
+			<select name="objetivo_id" id="objetivo_id">
+				<option value="1">Ganho de Massa Muscular</option>
+				<option value="2">Perda de Gordura (Cutting)</option>
+				<option value="3">Aprender uma nova skill</option>
+				<option value="4">Melhorar velocidade</option>
+			</select>
+		</div>
+
+		{#Nivel de experiencia tem que carregar da tabela niveis_experiencia?#}
+		<div class="input-container">
+			<label for="nivel_id">Nivel de experiencia:</label>
+			<select name="nivel_id" id="nivel_id">
+				<option value="1">Inciante</option>
+				<option value="2">Intermediario</option>
+				<option value="3">Avançado</option>
+			</select>
+		</div>
+
+		{#Modalidad esporte que carregar da tabela modalidades_esporte?#}
+		<div class="input-container">
+			<label for="tipo_esporte_id">Modalidad esporte:</label>
+			<select name="tipo_esporte_id" id="tipo_esporte_id">
+				<option value="1">Calistenia</option>
+				<option value="2">Musculação</option>
+				<option value="3">Corrida</option>
+			</select>
+		</div>
+
+		<div class="input-container">
+			<label>Peso (kg)
+				<span>*</span>
+			</label>
+			<input type="number" step="0.01" name="peso" value="{{peso}}" required>
+		</div>
+
+		<div class="input-container">
+			<label>Altura (m)
+				<span>*</span>
+			</label>
+			<input type="number" step="0.01" name="altura" value="{{altura}}" required>
+		</div>
+
+		{#Não precisa ser carregado já é padrão#}
+		<div class="input-container">
+			<label for="intensidade">Nível de Atividade Física:</label>
+			<select name="intensidade" id="intensidade">
+				<option value="1.2">Sedentário</option>
+				<option value="1.375">Leve</option>
+				<option value="1.55">Moderado</option>
+				<option value="1.725">Ativo</option>
+				<option value="1.9">Muito Ativo</option>
+			</select>
+		</div>
+
+		<div class="input-container">
+			<label for="dias_treino_semana">Dias de treino por semana:</label>
+			<input type="number" name="dias_treino_semana" min="0" max="7" value="{{ avaliacao.dias_treino_semana }}">
+		</div>
+
+		<div class="input-container">
+			<label>Meta Específica</label>
+			<textarea name="meta_especifica" class="input-textarea">{{meta_especifica}}</textarea>
+		</div>
+
+		<div class="input-container">
+			<div class="input-container">
+				<label for="foto_frente">Foto de Frente
+					<span>*</span>
+				</label>
+				<input type="file" id="foto_frente" name="foto_frente_path" accept="image/*">
+    			<img id="preview_frente" class="img-preview" src="#" alt="Preview" style="display: none;">
+			</div>
+		</div>
+
+		<div class="input-container">
+			<label for="foto_costa">Foto de Costa
+				<span>*</span>
+			</label>
+			<input type="file" id="foto_costa" name="foto_costa_path" accept="image/*">
+			<img id="foto_costa" class="img-preview" src="#" alt="Preview" style="display: none;">
+		</div>
+
+		<div class="input-container">
+			<label for="foto_lado">Foto de Lado
+				<span>*</span>
+			</label>
+			<input type="file" id="foto_lado" name="foto_lado_path" accept="image/*">
+			<img id="preview_lado" class="img-preview" src="#" alt="Preview" style="display: none;">
+		</div>
+
+		<div class="form-footer">
+			<div class="input-container">
+				<button type="submit" class="btn-salvar-footer">SALVAR</button>
+			</div>
+		</div>
 	</form>
-	#}
 {% endblock %}

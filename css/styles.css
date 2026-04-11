@@ -1,220 +1,348 @@
-*{
+:root {
+    --primary-color: #1976d2;   
+    --success-color: #4CAF50; 
+    --text-color: #333;
+    --label-color: #777;
+    --border-color: #ccc;
+    --bg-header: #2c3e50;
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.navigation-left{
-    width: 350px;
-    
-    display: flex;
-    justify-content:space-around;
-    
-}
-.navigation-left button{
-    cursor: pointer;
-    align-items: center;
-    line-height: 18px;
-    width: auto;
-}
-.navigation-left a{
-    text-decoration: none;
-    color: currentColor;
-    text-rendering: optimizeLegibility;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 14px;
-    font-family: inherit;
-}
-body{
-    font-family: Arial, Helvetica, sans-serif;
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
-.titulo{
+/* --- Navegação --- */
+.navigation-left {
+    display: flex;
+    gap: 15px; 
+    padding: 20px;
+}
+
+.navigation-left a, .navigation-left button {
+    text-decoration: none;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.navigation-left a:hover, .navigation-left button:hover {
+    background-color: #2980b9;
+}
+
+/* Reset básico para garantir que não haja margens indesejadas */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; /* Fonte limpa como na imagem */
+}
+
+/* --- A BARRA PRINCIPAL (O CONTAINER AZUL CLARO) --- */
+.navbar-top {
+    background-color: #00A6E6; /* Azul claro de fundo da imagem */
+    height: 60px; /* Altura da barra */
+    padding: 0 15px; /* Espaçamento interno nas laterais */
+    
+    /* Ativando o Flexbox para alinhar os 3 blocos */
+    display: flex;
+    justify-content: space-between; /* Espalha os 3 blocos: esquerda, centro, direita */
+    align-items: center; /* Centraliza todos verticalmente */
+    
+    /* Uma borda sutil na parte inferior para separação */
+    border-bottom: 2px solid #0090C8; 
+}
+
+
+/* --- ESTILOS COMPARTILHADOS PARA OS BOTÕES --- */
+.hamburguer-button,
+.actions-button {
+    background-color: #1A73E8; /* Azul mais escuro dos botões */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre ícone e texto */
+    transition: background-color 0.2s;
+    text-transform: uppercase; /* Força texto em maiúscula */
+}
+
+/* Hover genérico para os botões */
+.hamburguer-button:hover,
+.actions-button:hover {
+    background-color: #0d5bb5;
+}
+
+/* --- DETALHES DO BOTÃO MENU (ESQUERDA) --- */
+.hamburguer-button {
+    padding: 8px 12px; /* Proporção do botão */
+}
+
+.hamburguer-icon {
+    width: 18px; /* Ícone um pouco menor e mais delicado */
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hamburguer-icon .linha {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.label-menu {
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+/* --- DETALHES DO BLOCO CENTRAL (NOME DO USUÁRIO) --- */
+.user-info {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* --- DETALHES DO BOTÃO AÇÕES (DIREITA) --- */
+.actions-button {
+    padding: 8px 12px;
+}
+
+/* Ícone de seta simples feito com CSS puro */
+.icon-arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid white; /* Cria a ponta da seta */
+    margin-right: -2px; /* Ajuste fino de posição */
+}
+
+.label-actions {
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* --- Estrutura do Formulário --- */
+.fomulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.titulo {
     width: 100%;
     background-color: aliceblue;
-    height: 75px;
-    text-align: left;
-    padding-top: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-.campo{
-    padding:10px;
-    width:300px;
-}
-
-.campo label, .input-container label{
-    font-size:12px;
-    color:#777;
-    display:block;
-    margin-bottom:4px;
-    
-}
-
-.campo  label span{
-    color:red;
-}
-
-.campo input{
-    width:100%;
-    border:none;
-    border-bottom:2px solid #ccc;
-    background:transparent;
-    font-size:14px;
-    padding:4px 0;
-    outline:none;
-}
-
-.campo input:focus{
-    border-bottom:2px solid #1976d2;
-}
-
+/* --- Container Unificado (Input, Select, Textarea) --- */
 .input-container {
-  position: relative;
-  width: 100%;
-  max-width: 300px; 
-  padding: 10px;
-}
-
-.input-container label span{
-    color:red;
-}
-
-.input-container select {
-  width: 100%;
-  padding: 10px 5px 5px 5px;
-  border: none;
-  border-bottom: 1px solid #ccc; /* A linha cinza embaixo */
-  background-color: transparent;
-  font-size: 16px;
-  color: #333;
-  appearance: none; /* Remove a seta padrão em alguns browsers */
-  outline: none;
-  cursor: pointer;
-
-}
-
-.input-container::after {
-  content: '▼';
-  font-size: 10px;
-  color: #666;
-  position: absolute;
-  right: 15px;
-  bottom: 20px;
-  pointer-events: none;
-
-}
-
-.input-container select:focus {
-  border-bottom: 2px solid #007bff; /* Linha muda de cor no foco */
-  transition: border-bottom 0.2s ease;
-}
-
-.campo > input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.input-textarea {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    min-height: 80px;
+    max-width: 300px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.input-container label {
+    font-size: 12px;
+    color: var(--label-color);
+    margin-bottom: 4px;
+}
+
+.input-container label span {
+    color: red;
+}
+
+/* Estilo comum para campos de texto e select */
+.input-container input:not([type="submit"]),
+.input-container select,
+.input-container textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    background: transparent;
+    font-size: 15px;
+    padding: 8px 0;
     outline: none;
-    resize: vertical;
+    transition: border-color 0.3s;
 }
 
-.input-textarea:focus {
-    border: 2px solid #1976d2;
+/* Estilizando o botão "Escolher Arquivo" */
+.input-container input[type="file"]::file-selector-button {
+    border: none;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #555;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background 0.3s;
+    font-size: 12px;
+    text-transform: uppercase;
 }
 
-.btn-salvar {
+.input-container input[type="file"]::file-selector-button:hover {
+    background: #e0e0e0;
+}
+
+/* Deixando o texto de "Nenhum arquivo escolhido" mais suave */
+.input-container input[type="file"] {
+    font-size: 12px;
+    color: #888;
+    border-bottom: 1px solid #ccc; /* Linha mais fina para arquivos */
+}
+
+/* Foco unificado */
+.input-container input:focus,
+.input-container select:focus,
+.input-container textarea:focus {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Ajuste específico para o triângulo do Select */
+.input-container select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 25px;
+
     width: 100%;
-    background-color: #4CAF50;
+    padding: 10px 30px 5px 0; /* Aumente o padding-right para o texto não bater na seta */
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    cursor: pointer;
+    outline: none;
+}
+
+/* Ícone do select apenas quando for um select */
+.input-container:has(select)::after {
+    content: '▼';
+    font-size: 10px;
+    color: #666;
+    position: absolute;
+    right: 5px;
+    bottom: 20px;
+    pointer-events: none;
+}
+
+/* --- Textarea --- */
+.input-container textarea {
+    border: 1px solid var(--border-color); 
+    border-radius: 4px;
+    padding: 10px;
+    min-height: 100px;
+    resize: none;
+}
+
+.img-preview {
+    display: none; 
+    width: 150px; 
+    height: 150px;
+    object-fit: cover;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* --- Botão Salvar --- */
+.btn-salvar {
+    width: 70%;
+    max-width: 150px;
+    background-color: var(--success-color);
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 12px;
+    padding: 5px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    transition: background 0.3s;
+    margin-top: 10px;
+    transition: 0.3s;
 }
 
 .btn-salvar:hover {
     background-color: #45a049;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/*estilos do atleta_list*/
+.form-footer {
+    width: 100%;
+    background-color: #eeeeee; /* Cinza claro da barra */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Alinha o botão à direita */
+    border-top: 1px solid #ddd;
+}
+
+.form-footer .input-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.btn-salvar-footer {
+    background-color: var(--primary-color); /* Azul da sua imagem */
+    width: 150px;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    text-transform: uppercase;
+}
+
+/* --- Tabela --- */
 table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    margin: 20px 0;
+    margin-top: 20px;
 }
 
-/* Encabezado */
 thead {
-    background-color: #2c3e50;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
+    background-color: var(--bg-header);
+    color: white;
 }
 
-th {
+th, td {
     padding: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-
-/* Cuerpo de la tabla */
-tbody tr {
-    border-bottom: 1px solid #dddddd;
-    transition: background-color 0.3s ease;
-}
-
-tbody tr:last-of-type {
-    border-bottom: 2px solid #2c3e50;
+    text-align: left;
 }
 
 tbody tr:hover {
-    background-color: #f5f5f5;
-}
-
-td {
-    padding: 12px 15px;
-}
-
-/* Estilo para el botón dentro de la tabla */
-button {
-    background-color: #3498db;
-    color: white;
-    padding: 8px 16px;
-    width: 150px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease-in-out;
-}
-
-button:hover {
-    background-color: #2980b9;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-button:active {
-    transform: translateY(0);
+    background-color: #f8f9fa;
 }

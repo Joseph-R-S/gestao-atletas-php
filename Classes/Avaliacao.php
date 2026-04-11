@@ -1,25 +1,37 @@
 <?php
-require_once 'Conection.php';
+require_once 'Connection.php';
 require_once 'Atleta.php';
+
 class Avaliacao
 {
-    public static function save(array $avaliacao)
+    public static function save(array $dados)
     {
         try {
-            $conn = Connection::open();
+            $conn = Connection::open('db');
 
-            $param = [
-                ':atleta_id' => $avaliacao['atleta_id'],
-                ':objetivo_id' => $avaliacao['objetivo_id'],
-                ':nivel_id' => $avaliacao['nivel_id'],
-                ':tipo_esporte_id' => $avaliacao['tipo_esporte_id'],
-                ':foto_frente_path' => $avaliacao['foto_frente_path'],
-                ':foto_costa_path' => $avaliacao['foto_costa_path'],
-                ':foto_lado_path' => $avaliacao['foto_lado_path'],
-                ':meta_especifica ' => $avaliacao['meta_especifica '],
-                ':meta_especifica ' => $avaliacao['meta_especifica '],
-            ];
+            $sql = "INSERT INTO avaliacoes (atleta_id, objetivo_id, nivel_id, tipo_esporte_id, 
+                    foto_frente_path, foto_costa_path, foto_lado_path, meta_especifica, 
+                    peso, altura, intensidade, dias_treino_semana) 
+                    VALUES 
+                    (:atleta_id, :objetivo_id, :nivel_id, :tipo_esporte_id, 
+                    :foto_frente_path, :foto_costa_path, :foto_lado_path, :meta_especifica, 
+                    :peso, :altura, :intensidade, :dias_treino_semana)";
+            $result = $conn->prepare($sql);
 
+            $result->execute([
+                ':atleta_id' => $dados['atleta_id'],
+                ':objetivo_id' => $dados['objetivo_id'] ?? null,
+                ':nivel_id' => $dados['nivel_id'] ?? null,
+                ':tipo_esporte_id' => $dados['tipo_esporte_id'] ?? null,
+                ':foto_frente_path' => $dados['foto_frente_path'] ?? null,
+                ':foto_costa_path' => $dados['foto_costa_path'] ?? null,
+                ':foto_lado_path' => $dados['foto_lado_path'] ?? null,
+                ':meta_especifica' => $dados['meta_especifica'],
+                ':peso' => $dados['peso'] ?? 0,
+                ':altura' => $dados['altura'] ?? 0,
+                ':intensidade' => $dados['intensidade'] ?? null,
+                ':dias_treino_semana' => $dados['dias_treino_semana'] ?? 0,
+            ]);
         } catch (PDOException $e) {
             throw new Exception("Erro ao salvar: " .   $e->getMessage());
         }

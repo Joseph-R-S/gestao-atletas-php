@@ -60,5 +60,4 @@ class AtletaForm
             echo "Erro ao renderizar formulário: " . $e->getMessage();
         }
     }
-   
 }
