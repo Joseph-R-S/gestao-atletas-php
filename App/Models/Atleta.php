@@ -1,12 +1,18 @@
 <?php
-require_once 'Connection.php';
+
+namespace App\Models;
+
+use App\Database\Connection as Connection;
+use PDO;
+use PDOException;
+
 class Atleta
 {
     public static function save(array $atleta)
     {
-        try
-        {
+        try {
             $conn = Connection::open('db');
+            //$conn = Connection::open('gestao_atletas');
 
             $params = [
                 ':nome_completo'    => $atleta['nome_completo'],
@@ -16,12 +22,10 @@ class Atleta
                 ':data_nascimento'  => $atleta['data_nascimento']
             ];
 
-            if (empty($atleta['id'])) 
-            {
+            if (empty($atleta['id'])) {
                 $sql = "INSERT INTO atletas (nome_completo, email, sexo, telefone, data_nascimento) 
                 VALUES (:nome_completo, :email, :sexo, :telefone, :data_nascimento)";
-            } else 
-            {
+            } else {
                 $sql = "UPDATE atletas SET 
                     nome_completo   = :nome_completo,
                     email           = :email,
@@ -30,53 +34,47 @@ class Atleta
                     data_nascimento = :data_nascimento
                     WHERE id = :id";
 
-                    $params[':id'] = $atleta['id'];
+                $params[':id'] = $atleta['id'];
             }
             $result = $conn->prepare($sql);
             $result->execute($params);
-        }catch(PDOException $e)
-        {
-           throw new Exception("Erro ao salvar: " .   $e->getMessage());
+        } catch (PDOException $e) {
+            throw new PDOException("Erro ao salvar: " .   $e->getMessage());
         }
     }
 
     public static function find(int $id)
     {
-        try
-        {
+        try {
             $conn = Connection::open('db');
             $result = $conn->prepare("SELECT * FROM atletas WHERE id=:id");
-            $result->bindParam(':id', $id, PDO::PARAM_INT); 
+            $result->bindParam(':id', $id, PDO::PARAM_INT);
             $result->execute();
             return $result->fetch(PDO::FETCH_ASSOC);
-        }catch (PDOException $e)
-        {
-            throw new Exception('Erro ao buscar ' . $e->getMessage());
-   
+        } catch (PDOException $e) {
+            throw new PDOException('Erro ao buscar ' . $e->getMessage());
         }
     }
 
     public static function delete(int $id)
     {
-        try 
-        {
+        try {
             $conn = Connection::open('db');
             $result = $conn->prepare("DELETE FROM atletas WHERE id = :id");
             return $result->execute([':id' => $id]);
         } catch (PDOException $e) {
-            throw new Exception('Erro ao deletar ' . $e->getMessage());
-        } 
+            throw new PDOException('Erro ao deletar ' . $e->getMessage());
+        }
     }
 
     public static function all()
     {
-        try 
-        {
+        try {
             $conn = Connection::open('db');
             $result = $conn->query("SELECT * FROM atletas ORDER BY id");
             return $result->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            throw new Exception('Erro ao buscar ' . $e->getMessage());
-        } 
+            throw new PDOException('Erro ao buscar ' . $e->getMessage());
+        }
     }
 }

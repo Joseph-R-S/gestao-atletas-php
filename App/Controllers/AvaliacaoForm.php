@@ -1,10 +1,17 @@
 <?php
+
+namespace App\Controllers;
+
+use App\Models\Atleta as Atleta;
+use App\Models\Avaliacao as Avaliacao;
+use Exception;
+
 class AvaliacaoForm
 {
-    private Twig\Environment $twig;
+    private \Twig\Environment $twig;
     private array $param = [];
 
-    public function __construct(Twig\Environment $twig)
+    public function __construct(\Twig\Environment $twig)
     {
         $this->twig = $twig;
     }

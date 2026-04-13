@@ -1,6 +1,9 @@
 <?php
-require_once 'Connection.php';
-require_once 'Atleta.php';
+
+namespace App\Models;
+
+use App\Database\Connection;
+use PDOException;
 
 class Avaliacao
 {
@@ -33,7 +36,7 @@ class Avaliacao
                 ':dias_treino_semana' => $dados['dias_treino_semana'] ?? 0,
             ]);
         } catch (PDOException $e) {
-            throw new Exception("Erro ao salvar: " .   $e->getMessage());
+            throw new PDOException("Erro ao salvar: " .   $e->getMessage());
         }
     }
 }

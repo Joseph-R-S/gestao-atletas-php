@@ -1,4 +1,9 @@
 <?php
+namespace App\Controllers;
+
+use App\Models\Atleta as Atleta;
+use Exception;
+
 class AtletaForm
 {
     private \Twig\Environment $twig;
@@ -9,7 +14,7 @@ class AtletaForm
         $loader = new \Twig\Loader\FilesystemLoader('templates');
         //para poder fazer debug em twig, pode ser tirado despois, agora só porque estou aprendendo
         $this->twig = new \Twig\Environment($loader, [
-        'debug' => true,
+            'debug' => true,
         ]);
 
         $this->twig->addExtension(new \Twig\Extension\DebugExtension());
@@ -27,36 +32,30 @@ class AtletaForm
 
     public function edit(array $param)
     {
-        try
-        {
+        try {
             $id = (int) $param['id'];
             $this->data = Atleta::find($id);
-        }catch(Exception $e)
-        {
+        } catch (Exception $e) {
             echo "<h1>Erro ao buscar:</h1> " . $e->getMessage();
         }
     }
 
     public function save(array $param)
     {
-        try
-        {
+        try {
             Atleta::save($param);
             $this->data = $param;
             header("Location: index.php?class=AtletaList");
-        }catch(Exception $e)
-        {
+        } catch (Exception $e) {
             echo "<h1>Erro ao cadastrar:</h1> " . $e->getMessage();
         }
     }
 
     public function show()
     {
-        try
-        {
+        try {
             echo $this->twig->render('atleta_form.html.twig', ['atleta' => $this->data]);
-        }catch(Exception $e)
-        {
+        } catch (Exception $e) {
             echo "Erro ao renderizar formulário: " . $e->getMessage();
         }
     }
