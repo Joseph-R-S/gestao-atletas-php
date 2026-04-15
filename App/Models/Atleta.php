@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Database\Connection as Connection;
+use App\Database\Transaction as Transaction;
 use PDO;
 use PDOException;
 
@@ -11,8 +11,7 @@ class Atleta
     public static function save(array $atleta)
     {
         try {
-            $conn = Connection::open('db');
-            //$conn = Connection::open('gestao_atletas');
+            $conn = Transaction::get();
 
             $params = [
                 ':nome_completo'    => $atleta['nome_completo'],
@@ -36,8 +35,10 @@ class Atleta
 
                 $params[':id'] = $atleta['id'];
             }
-            $result = $conn->prepare($sql);
-            $result->execute($params);
+            $stmt = $conn->prepare($sql);
+            Transaction::logs($sql, $params);
+            $result = $stmt->execute($params);
+            return $result;
         } catch (PDOException $e) {
             throw new PDOException("Erro ao salvar: " .   $e->getMessage());
         }
@@ -46,8 +47,9 @@ class Atleta
     public static function find(int $id)
     {
         try {
-            $conn = Connection::open('db');
-            $result = $conn->prepare("SELECT * FROM atletas WHERE id=:id");
+            $conn = Transaction::get();
+            $sql = "SELECT * FROM atletas WHERE id=:id";
+            $result = $conn->prepare($sql);
             $result->bindParam(':id', $id, PDO::PARAM_INT);
             $result->execute();
             return $result->fetch(PDO::FETCH_ASSOC);
@@ -59,20 +61,36 @@ class Atleta
     public static function delete(int $id)
     {
         try {
-            $conn = Connection::open('db');
-            $result = $conn->prepare("DELETE FROM atletas WHERE id = :id");
-            return $result->execute([':id' => $id]);
+            $conn = Transaction::get();
+            $sql = "DELETE FROM atletas WHERE id = :id";
+            $stmt = $conn->prepare($sql);
+            Transaction::logs($sql);
+            $result = $stmt->execute([':id' => $id]);
+            return $result;
         } catch (PDOException $e) {
             throw new PDOException('Erro ao deletar ' . $e->getMessage());
         }
     }
 
-    public static function all()
+    public static function all(mixed $filter = '')
     {
         try {
-            $conn = Connection::open('db');
-            $result = $conn->query("SELECT * FROM atletas ORDER BY id");
-            return $result->fetchAll(PDO::FETCH_ASSOC);
+            $conn = Transaction::get();
+            $sql = "SELECT * FROM atletas";
+            $params = [];
+            if ($filter !== "") {
+                if (is_numeric($filter)) {
+                    $sql .= " WHERE id = :filter";
+                    $params[':filter'] = (int)$filter;
+                } else {
+                    $sql .= " WHERE nome LIKE :filter";
+                    $params[':filter'] = "%{$filter}%";
+                }
+            }
+            $sql .= " ORDER BY id";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new PDOException('Erro ao buscar ' . $e->getMessage());
         }

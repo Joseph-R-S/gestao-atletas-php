@@ -1,0 +1,7 @@
+2026-04-14 21:16:04 UPDATE atletas SET 
+                    nome_completo   = :nome_completo,
+                    email           = :email,
+                    sexo            = :sexo,
+                    telefone        = :telefone,
+                    data_nascimento = :data_nascimento
+                    WHERE id = :id | Dados: {":nome_completo":"Marina Mujica Sánchez Concepción",":email":"marina@email.com",":sexo":"M",":telefone":"65981429248",":data_nascimento":"2002-01-01",":id":"21"}

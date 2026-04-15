@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #1976d2;   
-    --success-color: #4CAF50; 
+    --primary-color: #1976d2;
+    --success-color: #4CAF50;
     --text-color: #333;
     --label-color: #777;
     --border-color: #ccc;
@@ -22,11 +22,12 @@ body {
 /* --- Navegação --- */
 .navigation-left {
     display: flex;
-    gap: 15px; 
+    gap: 15px;
     padding: 20px;
 }
 
-.navigation-left a, .navigation-left button {
+.navigation-left a,
+.navigation-left button {
     text-decoration: none;
     background-color: #3498db;
     color: white;
@@ -40,7 +41,8 @@ body {
     cursor: pointer;
 }
 
-.navigation-left a:hover, .navigation-left button:hover {
+.navigation-left a:hover,
+.navigation-left button:hover {
     background-color: #2980b9;
 }
 
@@ -48,37 +50,46 @@ body {
 body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif; /* Fonte limpa como na imagem */
+    font-family: sans-serif;
+    /* Fonte limpa como na imagem */
 }
 
 /* --- A BARRA PRINCIPAL (O CONTAINER AZUL CLARO) --- */
 .navbar-top {
-    background-color: #00A6E6; /* Azul claro de fundo da imagem */
-    height: 60px; /* Altura da barra */
-    padding: 0 15px; /* Espaçamento interno nas laterais */
-    
+    background-color: #00A6E6;
+    /* Azul claro de fundo da imagem */
+    height: 60px;
+    /* Altura da barra */
+    padding: 0 15px;
+    /* Espaçamento interno nas laterais */
+
     /* Ativando o Flexbox para alinhar os 3 blocos */
     display: flex;
-    justify-content: space-between; /* Espalha os 3 blocos: esquerda, centro, direita */
-    align-items: center; /* Centraliza todos verticalmente */
-    
+    justify-content: space-between;
+    /* Espalha os 3 blocos: esquerda, centro, direita */
+    align-items: center;
+    /* Centraliza todos verticalmente */
+
     /* Uma borda sutil na parte inferior para separação */
-    border-bottom: 2px solid #0090C8; 
+    border-bottom: 2px solid #0090C8;
 }
 
 
 /* --- ESTILOS COMPARTILHADOS PARA OS BOTÕES --- */
 .hamburguer-button,
 .actions-button {
-    background-color: #1A73E8; /* Azul mais escuro dos botões */
+    background-color: #1A73E8;
+    /* Azul mais escuro dos botões */
     border: none;
     border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px; /* Espaço entre ícone e texto */
+    gap: 8px;
+    /* Espaço entre ícone e texto */
     transition: background-color 0.2s;
-    text-transform: uppercase; /* Força texto em maiúscula */
+    text-transform: uppercase;
+    /* Força texto em maiúscula */
 }
 
 /* Hover genérico para os botões */
@@ -89,11 +100,13 @@ body {
 
 /* --- DETALHES DO BOTÃO MENU (ESQUERDA) --- */
 .hamburguer-button {
-    padding: 8px 12px; /* Proporção do botão */
+    padding: 8px 12px;
+    /* Proporção do botão */
 }
 
 .hamburguer-icon {
-    width: 18px; /* Ícone um pouco menor e mais delicado */
+    width: 18px;
+    /* Ícone um pouco menor e mais delicado */
     height: 14px;
     display: flex;
     flex-direction: column;
@@ -135,8 +148,10 @@ body {
     height: 0;
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
-    border-left: 10px solid white; /* Cria a ponta da seta */
-    margin-right: -2px; /* Ajuste fino de posição */
+    border-left: 10px solid white;
+    /* Cria a ponta da seta */
+    margin-right: -2px;
+    /* Ajuste fino de posição */
 }
 
 .label-actions {
@@ -218,7 +233,8 @@ body {
 .input-container input[type="file"] {
     font-size: 12px;
     color: #888;
-    border-bottom: 1px solid #ccc; /* Linha mais fina para arquivos */
+    border-bottom: 1px solid #ccc;
+    /* Linha mais fina para arquivos */
 }
 
 /* Foco unificado */
@@ -235,7 +251,8 @@ body {
     padding-right: 25px;
 
     width: 100%;
-    padding: 10px 30px 5px 0; /* Aumente o padding-right para o texto não bater na seta */
+    padding: 10px 30px 5px 0;
+    /* Aumente o padding-right para o texto não bater na seta */
     background-color: transparent;
     border: none;
     border-bottom: 2px solid var(--border-color);
@@ -256,7 +273,7 @@ body {
 
 /* --- Textarea --- */
 .input-container textarea {
-    border: 1px solid var(--border-color); 
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 10px;
     min-height: 100px;
@@ -264,14 +281,14 @@ body {
 }
 
 .img-preview {
-    display: none; 
-    width: 150px; 
+    display: none;
+    width: 150px;
     height: 150px;
     object-fit: cover;
     margin-top: 10px;
     border-radius: 8px;
     border: 2px solid var(--border-color);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Botão Salvar --- */
@@ -292,19 +309,21 @@ body {
 
 .btn-salvar:hover {
     background-color: #45a049;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-footer {
     width: 100%;
-    background-color: #eeeeee; /* Cinza claro da barra */
+    background-color: #eeeeee;
+    /* Cinza claro da barra */
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* Alinha o botão à direita */
+    justify-content: flex-end;
+    /* Alinha o botão à direita */
     border-top: 1px solid #ddd;
 }
 
-.form-footer .input-container{
+.form-footer .input-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -312,7 +331,8 @@ body {
 }
 
 .btn-salvar-footer {
-    background-color: var(--primary-color); /* Azul da sua imagem */
+    background-color: var(--primary-color);
+    /* Azul da sua imagem */
     width: 150px;
     color: white;
     border: none;
@@ -320,7 +340,7 @@ body {
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
 }
 
@@ -338,11 +358,22 @@ thead {
     color: white;
 }
 
-th, td {
+th,
+td {
     padding: 15px;
     text-align: left;
 }
 
 tbody tr:hover {
     background-color: #f8f9fa;
+}
+
+#toast {
+    position: fixed;
+    bottom: 20px;
+    background: #059669;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: none;
 }
