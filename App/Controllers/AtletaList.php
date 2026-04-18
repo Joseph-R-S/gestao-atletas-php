@@ -19,7 +19,8 @@ class AtletaList
         try {
             Transaction::open('db');
             $id = (int) $param['id'];
-            Atleta::delete($id);
+            $atleta = new Atleta;
+            $atleta->delete($id);
             Transaction::close();
             header("Location: index.php?class=AtletaList");
             exit;
@@ -33,6 +34,7 @@ class AtletaList
     {
         try {
             Transaction::open('db');
+
             $atletas = Atleta::all();
             Transaction::close();
             echo $this->twig->render('atleta_list.html.twig', ['atletas' => $atletas]);

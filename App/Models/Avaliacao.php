@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Database\Connection;
-use App\Database\Transaction;
-use PDO;
-use PDOException;
-
-class Avaliacao
+class Avaliacao extends Record
 {
+    const TABLENAME = 'avaliacoes';
+    
+    /*
     public static function save(array $dados)
     {
         try {
@@ -81,5 +79,5 @@ class Avaliacao
         } catch (PDOException $e) {
             throw new PDOException("Erro ao buscar: " .   $e->getMessage());
         }
-    }
+    }*/
 }

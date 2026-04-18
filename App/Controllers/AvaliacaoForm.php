@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Database\Transaction;
 use App\Models\Atleta as Atleta;
+use App\Models\Record;
 use App\Models\Avaliacao as Avaliacao;
 use Exception;
 
@@ -25,7 +26,8 @@ class AvaliacaoForm
                 throw new Exception("ID do atleta não fornecido.");
             }
             Transaction::open('db');
-            $atleta = Atleta::find($id);
+            $atleta = new Atleta();
+            $atleta->load($id);
             Transaction::close();
 
             echo $this->twig->render('avaliacao_form.html.twig', ['atleta' => $atleta]);
@@ -35,7 +37,8 @@ class AvaliacaoForm
             $atleta = null;
             if (isset($id) && $id) {
                 Transaction::open('db');
-                $atleta = Atleta::find($id);
+                $atleta = new Atleta;
+                $atleta->load($id);
                 Transaction::close();
             }
             echo $this->twig->render('avaliacao_form.html.twig', [
@@ -69,8 +72,11 @@ class AvaliacaoForm
                 }
             }
             Transaction::open('db');
-            Avaliacao::save($param);
-            $atleta = Atleta::find($param['atleta_id']);
+            $avaliacao = new Avaliacao;
+            $avaliacao->fromArray($param);
+            $avaliacao->store();
+            $atleta = new Atleta;
+            $atleta->load(($param['atleta_id']));
             Transaction::close();
 
             echo $this->twig->render('avaliacao_form.html.twig', [
