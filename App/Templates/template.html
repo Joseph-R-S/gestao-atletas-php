@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PHP - Programando com Orientação a Objetos (Bootstrap 5)</title>
+
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+
+    <script src="App/Templates/assets/js/Chart.bundle.min.js"></script>
+
+    <style>
+        /* Estructura fija del panel en pantallas de computadora (>= 768px) */
+        @media (min-width: 768px) {
+            .sidebar-wrapper-b5 {
+                width: 260px !important;
+                height: 100vh !important;
+                position: fixed !important;
+                top: 0;
+                left: 0;
+                z-index: 1040;
+            }
+
+            .main-panel-b5 {
+                margin-left: 260px !important;
+            }
+
+            .navbar-b5 {
+                left: 260px !important;
+                width: calc(100% - 260px) !important;
+            }
+        }
+
+        /* Estilo sutil de enlaces activos / hover parecidos al dashboard original */
+        .sidebar-links .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Estilos exclusivos para pantallas pequeñas (móviles y tablets) */
+        @media (max-width: 767.98px) {
+            .custom-navbar-collapse {
+                background-color: #ffffff;
+                /* Fondo blanco para que los elementos floten */
+                border-radius: 8px;
+                /* Bordes suavemente redondeados */
+                padding: 10px;
+                /* Espacio interno para que no quede pegado */
+                margin-top: 10px;
+                /* Separación de la barra azul superior */
+
+                /* Sombra elegante y moderna de Bootstrap 5 (shadow) */
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-secondary-subtle">
+
+    <div class="d-flex min-vh-100 flex-column flex-md-row">
+
+        <div class="offcanvas-md offcanvas-start  bg-dark text-white d-flex flex-column sidebar-wrapper-b5"
+            tabindex="-1" id="sidebarMenu" style="flex-shrink: 0;">
+            <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                <a href="http://www.php.com.br" target="_blank"
+                    class="text-white text-decoration-none fs-5 fw-bold mx-auto text-uppercase tracking-wide">
+                    PHP OO 5<sup>ed</sup>
+                </a>
+                <button type="button" class="btn-close btn-close-white d-md-none" data-bs-dismiss="offcanvas"
+                    data-bs-target="#sidebarMenu" aria-label="Close"></button>
+            </div>
+            
+            <!--SIDEBAR-->
+            <aside class="sidebar-links p-3 flex-grow-1 overflow-auto">
+                <ul class="nav nav-pills flex-column gap-1">
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=AtletaList"><i class="fa fa-users me-3 text-center"
+                                style="width:20px;"></i>Atetas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=ObjetivosList"><i class="fa fa-tasks me-3 text-center"
+                                style="width:20px;"></i>Objetivos</a></li>
+                    
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=Atle"><i class="fa fa-tasks me-3 text-center"
+                                style="width:20px;"></i>Form Notebook</a></li>
+                <!--    
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=CidadesFormList"><i class="fa fa-map-marker me-3 text-center"
+                                style="width:20px;"></i> Cidades</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=FabricantesFormList"><i class="fa fa-industry me-3 text-center"
+                                style="width:20px;"></i> Fabricantes</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=ProdutosList"><i class="fa fa-cubes me-3 text-center"
+                                style="width:20px;"></i> Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=PessoasList"><i class="fa fa-users me-3 text-center"
+                                style="width:20px;"></i> Pessoas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=VendasForm"><i class="fa fa-shopping-cart me-3 text-center"
+                                style="width:20px;"></i> Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=VendasReport"><i class="fa fa-file-text-o me-3 text-center"
+                                style="width:20px;"></i> Rel. Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=ContasReport"><i class="fa fa-file-text-o me-3 text-center"
+                                style="width:20px;"></i> Rel. Contas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=ProdutosReport"><i class="fa fa-file-text-o me-3 text-center"
+                                style="width:20px;"></i> Rel. Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=PessoasReport"><i class="fa fa-file-text-o me-3 text-center"
+                                style="width:20px;"></i> Rel. Pessoas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=VendasMesChart"><i class="fa fa-bar-chart me-3 text-center"
+                                style="width:20px;"></i> Vendas mês</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=VendasTipoChart"><i class="fa fa-pie-chart me-3 text-center"
+                                style="width:20px;"></i> Vendas tipo</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            href="index.php?class=DashboardView"><i class="fa fa-tachometer me-3 text-center"
+                                style="width:20px;"></i> Dashboard</a></li>
+                    -->
+                </ul>
+            </aside>
+        </div>
+
+        <main class="flex-grow-1 d-flex flex-column main-panel-b5 position-relative">
+            <nav class="navbar navbar-expand-md navbar-li bg-primary border-bottom fixed-top navbar-b5"
+                style="height: 63px;">
+                <div class="container-fluid">
+
+                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <a class="navbar-brand fs-6 ms-2 ms-md-0 text-white"
+                        href="index.php?class=ViewSource&method=onView&source={class}">
+                        <i class="fa fa-code me-1"></i> Código-fonte
+                    </a>
+
+                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse custom-navbar-collapse" id="navbarContent">
+                        <ul class="navbar-nav ms-auto align-items-md-center gap-2 flex-column flex-md-row pt-2 pt-md-0">
+
+                            <li class="nav-item dropdown w-100 w-md-auto">
+                                <a class="nav-link dropdown-toggle text-dark text-md-white border-0 shadow-none px-3 px-md-2 py-2 py-md-0"
+                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false" style="background: transparent;">
+                                    Atalhos
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0"
+                                    aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="index.php?class=ProdutosList">Produtos</a></li>
+                                    <li><a class="dropdown-item" href="index.php?class=PessoasList">Pessoas</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="index.php?class=VendasForm">Vendas</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item w-100 w-md-auto my-2 my-md-0 px-3 px-md-0">
+                                <a class="btn btn-outline-danger btn-md-outline-light btn-sm px-3 d-block d-md-inline-block text-center"
+                                    href="index.php?class=LoginForm&method=onLogout">
+                                    Log out
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+             <div class="container-fluid pt-4 mt-3 px-2 flex-grow-1">
+                <div class="py-4">
+                    <div class="row mx-0">
+                        <div class="col-12 px-0">
+                            <div class="w-100">
+                                {content}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="py-3 px-4 bg-light border-top mt-auto">
+                <div class="container-fluid p-0">
+                    <p class="m-0 text-center text-md-end text-secondary small">
+                        <a href="http://www.php.com.br" target="_blank"
+                            class="text-secondary text-decoration-none fw-bold">
+                            PHP - Programando com Orientação a Objetos
+                        </a>
+                    </p>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

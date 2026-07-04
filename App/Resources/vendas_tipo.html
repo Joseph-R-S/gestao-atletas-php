@@ -1,0 +1,43 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div style="position: relative; height: 400px; width: 100%;">
+  <canvas id="pie-chart"></canvas> </div>
+
+<script>
+  new Chart(document.getElementById("pie-chart"), {
+    type: 'pie', // Tipo de gráfico: Pastel
+    data: {
+      labels: {{ labels | raw }},
+      datasets: [{
+        label: "Vendas (R$)",
+        backgroundColor: [ 
+          'rgba(220,57,18, 0.5)','rgba(255,153,0, 0.5)','rgba(16,150,24, 0.5)','rgba(153,0,153,0.5)',
+          'rgba(59,62,172,0.5)','rgba(0,153,198,0.5)','rgba(221,68,119,0.5)','rgba(102,170,0,0.5)',
+          'rgba(184,46,46,0.5)','rgba(49,99,149,0.5)','rgba(153,68,153,0.5)','rgba(34,170,153,0.5)',
+          'rgba(170,170,17,0.5)','rgba(102,51,204,0.5)','rgba(230,115,0,0.5)','rgba(139,7,7,0.5)',
+          'rgba(50,146,98,0.5)','rgba(85,116,166,0.5)','rgba(59,62,172,0.5)'
+        ],
+        data: {{ data | raw }},
+        borderWidth: 1,
+        borderColor: '#fff' // Bordes blancos individuales para separar las rebanadas del pastel
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true, // En gráficos de pastel es mejor dejar la leyenda visible para saber qué es cada color
+          position: 'top' // Coloca la lista de meses/etiquetas arriba del gráfico
+        },
+        title: {
+          display: true,
+          text: '{{ title }}',
+          font: {
+            size: 18
+          }
+        }
+      }
+    }
+  });
+</script>

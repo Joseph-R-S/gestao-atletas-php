@@ -1,5 +1,7 @@
 {
     "require": {
-        "twig/twig": "^3.0"
+        "twig/twig": "3.*",
+        "picqer/php-barcode-generator": "^3.2",
+        "bacon/bacon-qr-code": "^3.1"
     }
 }

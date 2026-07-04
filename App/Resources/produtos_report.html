@@ -1,0 +1,38 @@
+<table class="table table-bordered" width="100%" style="border-collapse: collapse; background-color: #fff; table-layout: fixed;">
+  <tr bgcolor="#7A9BCB" style="color:white">
+      <td colspan="3"><b>Produtos</b></td> 
+  </tr>
+  
+  {% for produto in produtos %}
+  <tr>
+      <td align="center" style="vertical-align:middle; width: 34%; padding: 20px; overflow: hidden;">
+        <span style="font-size:17pt; line-height: 1.5; color: #333;">
+          {{produto.id}} <br>
+          <b>{{produto.descricao}}</b> <br>
+          {{produto.estoque}} unidades <br>
+          R$ {{produto.preco_venda | number_format(2, ',', '.')}} 
+        </span>
+      </td>
+      
+      <td align="center" style="vertical-align:middle; width: 33%; padding: 20px; overflow: hidden;">
+        <div style="display: inline-block; max-width: 100%; width: 220px; word-break: break-all;">
+          {{produto.barcode | raw}}
+        </div>
+      </td>
+      
+      <td align="center" style="vertical-align:middle; width: 33%; padding: 20px; overflow: hidden;">
+        <div class="qr-container" style="display: inline-block; width: 130px; height: 130px; max-width: 100%;">
+          {{produto.qrcode | raw}}
+        </div>
+      </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<style>
+  .qr-container svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+</style>

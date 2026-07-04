@@ -1,0 +1,18 @@
+/* Pequenos ajustes finos que o Bootstrap deixa livre para o desenvolvedor */
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: #e5e5e5; /* Cor cinza de fundo do painel */
+}
+
+.sidebar-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.sidebar-links a:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+

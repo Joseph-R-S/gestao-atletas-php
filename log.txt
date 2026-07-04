@@ -1,1 +1,0 @@
-2026-04-17 22:31:14 INSERT INTO atletas (nome_completo, email, sexo, telefone, data_nascimento) VALUES (:nome_completo, :email, :sexo, :telefone, :data_nascimento) | Dados: {":nome_completo":"Marina Mujica Sánchez Concepción",":email":"marina@email.com",":sexo":"M",":telefone":"65981429210",":data_nascimento":"1989-10-13"}
