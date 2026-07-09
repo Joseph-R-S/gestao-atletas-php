@@ -47,7 +47,8 @@ class AtletaList extends Page{
 
 
         $this->datagrid->addAction( 'Editar Cadastro', new TAction([new AtletaForm, 'onEdit']), 'id', 'fa fa-edit fa-lg blue');
-        $this->datagrid->addAction( 'Objetivo', new TAction([new PerfilAtleta, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
+        $this->datagrid->addAction( 'Objetivo', new TAction([new PerfilAtleta, 'onEdit']), 'id', 'fa fa-line-chart fa-lg');
+        $this->datagrid->addAction( 'Medidas', new TAction([new MedidasCorporaisFomList, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
        
         
         $box = new TVBox;

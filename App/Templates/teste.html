@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Colapsable Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container mt-4">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+            ☰ Abrir Menú
+        </button>
+        
+        <div class="mt-4">
+            <h1>Contenido Principal</h1>
+            <p>Este es el área de tu página web. Al hacer clic en el botón, el menú lateral se deslizará desde la izquierda.</p>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title" id="sidebarMenuLabel">Mi Panel</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        
+        <div class="offcanvas-body">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-white active" aria-current="page">Inicio</a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">Configuración</a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">Usuarios</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

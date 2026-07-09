@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PHP - Programando com Orientação a Objetos (Bootstrap 5)</title>
+    <title>TRAINER APP</title>
 
     <link rel="icon" type="image/png" href="assets/img/favicon.ico">
 
@@ -15,46 +15,39 @@
     <script src="App/Templates/assets/js/Chart.bundle.min.js"></script>
 
     <style>
-        /* Estructura fija del panel en pantallas de computadora (>= 768px) */
-        @media (min-width: 768px) {
-            .sidebar-wrapper-b5 {
-                width: 260px !important;
-                height: 100vh !important;
-                position: fixed !important;
-                top: 0;
-                left: 0;
-                z-index: 1040;
-            }
-
-            .main-panel-b5 {
-                margin-left: 260px !important;
-            }
-
-            .navbar-b5 {
-                left: 260px !important;
-                width: calc(100% - 260px) !important;
-            }
+        /* Estructura base fluida para Escritorio */
+        .sidebar-wrapper-b5 {
+            width: 260px;
+            min-width: 260px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            z-index: 1040;
+            transition: margin-left 0.3s ease;
         }
 
-        /* Estilo sutil de enlaces activos / hover parecidos al dashboard original */
-        .sidebar-links .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .main-panel-b5 {
+            transition: margin-left 0.3s ease;
+        }
+
+        /* En escritorio: Si se activa la clase, se esconde hacia la izquierda */
+        .sidebar-hidden .sidebar-wrapper-b5 {
+            margin-left: -260px;
         }
 
         /* Estilos exclusivos para pantallas pequeñas (móviles y tablets) */
         @media (max-width: 767.98px) {
-            .custom-navbar-collapse {
-                background-color: #ffffff;
-                /* Fondo blanco para que los elementos floten */
-                border-radius: 8px;
-                /* Bordes suavemente redondeados */
-                padding: 10px;
-                /* Espacio interno para que no quede pegado */
-                margin-top: 10px;
-                /* Separación de la barra azul superior */
+            .sidebar-wrapper-b5 {
+                position: fixed;
+                left: 0;
+                margin-left: -260px;
+                /* Oculto por defecto en móvil */
+                z-index: 1050;
+            }
 
-                /* Sombra elegante y moderna de Bootstrap 5 (shadow) */
-                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            /* En móviles, cuando se activa, se muestra deslizándose desde la izquierda */
+            .sidebar-show-mobile .sidebar-wrapper-b5 {
+                margin-left: 0;
             }
         }
     </style>
@@ -62,91 +55,57 @@
 
 <body class="bg-secondary-subtle">
 
-    <div class="d-flex min-vh-100 flex-column flex-md-row">
+    <!-- Añadimos id="wrapper" para controlar la alternancia desde JS -->
+    <div id="wrapper" class="d-flex min-vh-100 flex-column flex-md-row">
 
-        <div class="offcanvas-md offcanvas-start  bg-dark text-white d-flex flex-column sidebar-wrapper-b5"
-            tabindex="-1" id="sidebarMenu" style="flex-shrink: 0;">
+        <!-- Cambiamos offcanvas por un div estructurado clásico -->
+        <div class="sidebar-wrapper-b5 bg-dark text-white d-flex flex-column" id="sidebarMenu">
             <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
                 <a href="http://www.php.com.br" target="_blank"
                     class="text-white text-decoration-none fs-5 fw-bold mx-auto text-uppercase tracking-wide">
                     PHP OO 5<sup>ed</sup>
                 </a>
-                <button type="button" class="btn-close btn-close-white d-md-none" data-bs-dismiss="offcanvas"
-                    data-bs-target="#sidebarMenu" aria-label="Close"></button>
+                <!-- Botón de cerrar exclusivo para pantallas móviles -->
+                <button type="button" class="btn-close btn-close-white d-md-none" onclick="toggleSidebar()"></button>
             </div>
-            
+
             <!--SIDEBAR-->
-            <aside class="sidebar-links p-3 flex-grow-1 overflow-auto">
+            <aside class="sidebar-links p-3 flex-grow-1 overflow-auto wrapper">
                 <ul class="nav nav-pills flex-column gap-1">
                     <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
                             href="index.php?class=AtletaList"><i class="fa fa-users me-3 text-center"
-                                style="width:20px;"></i>Atetas</a></li>
+                                style="width:20px;"></i>Atletas</a></li>
                     <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
                             href="index.php?class=ObjetivosList"><i class="fa fa-tasks me-3 text-center"
                                 style="width:20px;"></i>Objetivos</a></li>
-                    
                     <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
                             href="index.php?class=Atle"><i class="fa fa-tasks me-3 text-center"
                                 style="width:20px;"></i>Form Notebook</a></li>
-                <!--    
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=CidadesFormList"><i class="fa fa-map-marker me-3 text-center"
-                                style="width:20px;"></i> Cidades</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=FabricantesFormList"><i class="fa fa-industry me-3 text-center"
-                                style="width:20px;"></i> Fabricantes</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=ProdutosList"><i class="fa fa-cubes me-3 text-center"
-                                style="width:20px;"></i> Produtos</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=PessoasList"><i class="fa fa-users me-3 text-center"
-                                style="width:20px;"></i> Pessoas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=VendasForm"><i class="fa fa-shopping-cart me-3 text-center"
-                                style="width:20px;"></i> Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=VendasReport"><i class="fa fa-file-text-o me-3 text-center"
-                                style="width:20px;"></i> Rel. Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=ContasReport"><i class="fa fa-file-text-o me-3 text-center"
-                                style="width:20px;"></i> Rel. Contas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=ProdutosReport"><i class="fa fa-file-text-o me-3 text-center"
-                                style="width:20px;"></i> Rel. Produtos</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=PessoasReport"><i class="fa fa-file-text-o me-3 text-center"
-                                style="width:20px;"></i> Rel. Pessoas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=VendasMesChart"><i class="fa fa-bar-chart me-3 text-center"
-                                style="width:20px;"></i> Vendas mês</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=VendasTipoChart"><i class="fa fa-pie-chart me-3 text-center"
-                                style="width:20px;"></i> Vendas tipo</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
-                            href="index.php?class=DashboardView"><i class="fa fa-tachometer me-3 text-center"
-                                style="width:20px;"></i> Dashboard</a></li>
-                    -->
                 </ul>
             </aside>
         </div>
 
+        <!-- Se corrigió el nombre de la clase a main-panel-b5 -->
         <main class="flex-grow-1 d-flex flex-column main-panel-b5 position-relative">
-            <nav class="navbar navbar-expand-md navbar-li bg-primary border-bottom fixed-top navbar-b5"
-                style="height: 63px;">
+
+            <!-- Navbar: quitamos fixed-top para que fluya correctamente al empujar el contenido -->
+            <nav class="navbar navbar-expand-md navbar-light bg-primary border-bottom" style="height: 63px;">
                 <div class="container-fluid">
 
-                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
-                        <i class="fa fa-bars"></i>
+                    <!-- Botón corregido para accionar la función JS personalizada -->
+                    <button class="btn btn-primary border border-white btn-sm px-3 d-block d-md-inline-block"
+                        type="button" onclick="toggleSidebar()">
+                        ☰ Menú
                     </button>
 
-                    <a class="navbar-brand fs-6 ms-2 ms-md-0 text-white"
+                    <!--<a class="navbar-brand fs-6 ms-2 ms-md-0 text-white"
                         href="index.php?class=ViewSource&method=onView&source={class}">
                         <i class="fa fa-code me-1"></i> Código-fonte
-                    </a>
+                    </a>-->
 
-                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false">
+                    <button class="navbar-toggler d-md-none text-white border-white" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent"
+                        aria-expanded="false">
                         <i class="fa fa-bars"></i>
                     </button>
 
@@ -171,7 +130,7 @@
                             </li>
 
                             <li class="nav-item w-100 w-md-auto my-2 my-md-0 px-3 px-md-0">
-                                <a class="btn btn-outline-danger btn-md-outline-light btn-sm px-3 d-block d-md-inline-block text-center"
+                                <a class="btn btn-danger border border-danger btn-sm px-3 d-block d-md-inline-block text-center"
                                     href="index.php?class=LoginForm&method=onLogout">
                                     Log out
                                 </a>
@@ -181,7 +140,8 @@
                     </div>
                 </div>
             </nav>
-             <div class="container-fluid pt-4 mt-3 px-2 flex-grow-1">
+
+            <div class="container-fluid pt-4 px-2 flex-grow-1">
                 <div class="py-4">
                     <div class="row mx-0">
                         <div class="col-12 px-0">
@@ -208,6 +168,37 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script sencillo para controlar la transición suave del menú -->
+    <script>
+        // 1. Al cargar la página, verificamos inmediatamente el estado guardado
+        document.addEventListener("DOMContentLoaded", function () {
+            const wrapper = document.getElementById('wrapper');
+            const sidebarState = localStorage.getItem('sidebar-hidden');
+            const isMobile = window.innerWidth < 768;
+
+            // Si en la sesión anterior el usuario lo ocultó (y está en escritorio), lo aplicamos antes de que parpadee
+            if (!isMobile && sidebarState === 'true') {
+                wrapper.classList.add('sidebar-hidden');
+            }
+        });
+
+        // 2. Modificamos la función para que guarde la preferencia en cada clic
+        function toggleSidebar() {
+            const wrapper = document.getElementById('wrapper');
+            const isMobile = window.innerWidth < 768;
+
+            if (isMobile) {
+                wrapper.classList.toggle('sidebar-show-mobile');
+            } else {
+                wrapper.classList.toggle('sidebar-hidden');
+
+                // Guardamos true o false en el navegador según si tiene la clase aplicada
+                const isHidden = wrapper.classList.contains('sidebar-hidden');
+                localStorage.setItem('sidebar-hidden', isHidden);
+            }
+        }
+    </script>
 </body>
 
 </html>

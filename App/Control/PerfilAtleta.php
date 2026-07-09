@@ -34,7 +34,7 @@ class PerfilAtleta extends Page
         $prazo_meses = new Combo('prazo_meses');
         $motivo = new Text('motivo');
 
-                $num = array();
+        $num = array();
         for ($i = 1; $i <= 12; $i++) {
             $num[$i] = $i;
         }
@@ -91,10 +91,9 @@ class PerfilAtleta extends Page
         $this->notebook->appendPage('Objetivo', $this->form);
         $this->notebook->appendPage('Medidas', $this->form_medidas);
 
-        $panel->add($this->notebook);
+        $panel->add($this->form);
         $box = new TVBox;
         $box->add($panel);
-        $box->add($this->notebook);
         parent::add($panel);
     }
 
