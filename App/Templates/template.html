@@ -17,8 +17,8 @@
     <style>
         /* Estructura base fluida para Escritorio */
         .sidebar-wrapper-b5 {
-            width: 260px;
-            min-width: 260px;
+            width: 200px;
+            min-width: 200px;
             height: 100vh;
             position: sticky;
             top: 0;
@@ -32,7 +32,7 @@
 
         /* En escritorio: Si se activa la clase, se esconde hacia la izquierda */
         .sidebar-hidden .sidebar-wrapper-b5 {
-            margin-left: -260px;
+            margin-left: -200px;
         }
 
         /* Estilos exclusivos para pantallas pequeñas (móviles y tablets) */
@@ -40,7 +40,7 @@
             .sidebar-wrapper-b5 {
                 position: fixed;
                 left: 0;
-                margin-left: -260px;
+                margin-left: -200px;
                 /* Oculto por defecto en móvil */
                 z-index: 1050;
             }
@@ -72,15 +72,15 @@
             <!--SIDEBAR-->
             <aside class="sidebar-links p-3 flex-grow-1 overflow-auto wrapper">
                 <ul class="nav nav-pills flex-column gap-1">
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3" style="font-size: small;"
                             href="index.php?class=AtletaList"><i class="fa fa-users me-3 text-center"
-                                style="width:20px;"></i>Atletas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                                style="width:10px;"></i>Atletas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3" style="font-size: small;"
                             href="index.php?class=ObjetivosList"><i class="fa fa-tasks me-3 text-center"
-                                style="width:20px;"></i>Objetivos</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                                style="width:10px;"></i>Objetivos</a></li>
+                    <!--<li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3" style="font-size: small;"
                             href="index.php?class=Atle"><i class="fa fa-tasks me-3 text-center"
-                                style="width:20px;"></i>Form Notebook</a></li>
+                                style="width:10px;"></i>Form Notebook</a></li>-->
                 </ul>
             </aside>
         </div>
@@ -141,11 +141,11 @@
                 </div>
             </nav>
 
-            <div class="container-fluid pt-4 px-2 flex-grow-1">
-                <div class="py-4">
+            <div class="container-fluid pt-1 px-2 flex-grow-1">
+                <div class="py-2">
                     <div class="row mx-0">
                         <div class="col-12 px-0">
-                            <div class="w-100">
+                            <div>
                                 {content}
                             </div>
                         </div>

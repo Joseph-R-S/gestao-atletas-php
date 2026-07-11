@@ -4,6 +4,7 @@ use Livro\Control\Page;
 use Livro\Database\Criteria;
 use Livro\Database\Repository;
 use Livro\Database\Transaction;
+use Livro\Traits\DeleteTrait;
 use Livro\Traits\EditTrait;
 use Livro\Widgets\Container\TVBox;
 use Livro\Widgets\Datagrid\Datagrid;
@@ -20,8 +21,12 @@ class AtletaList extends Page{
     private $connection;
     private $activeRecord;
 
+    use DeleteTrait;
+
     public function __construct()
     {
+        $this->activeRecord = 'Atletas';
+        $this->connection   = 'livro';
         parent::__construct();
 
         $this->form = new FormWrapper(new Form('form_busca_atleta'));
@@ -47,8 +52,9 @@ class AtletaList extends Page{
 
 
         $this->datagrid->addAction( 'Editar Cadastro', new TAction([new AtletaForm, 'onEdit']), 'id', 'fa fa-edit fa-lg blue');
-        $this->datagrid->addAction( 'Objetivo', new TAction([new PerfilAtleta, 'onEdit']), 'id', 'fa fa-line-chart fa-lg');
-        $this->datagrid->addAction( 'Medidas', new TAction([new MedidasCorporaisFomList, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
+        $this->datagrid->addAction( 'Excluir',  new TAction([$this, 'onDelete']),  'id', 'fa fa-trash fa-lg text-danger');
+        $this->datagrid->addAction( 'Objetivo', new TAction([new ObjetivoAtletaForm, 'onEdit']), 'id', 'fa fa-line-chart fa-lg');
+        $this->datagrid->addAction( 'Medidas', new TAction([new PerfilAtletaFomList, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
        
         
         $box = new TVBox;

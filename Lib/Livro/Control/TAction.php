@@ -1,8 +1,8 @@
 <?php
 namespace Livro\Control;
 
-use Livro\Core\AdiantiCoreApplication; // Cambiado a tu namespace
-use Livro\Core\AdiantiCoreTranslator;    // Cambiado a tu namespace
+use Livro\Core\AdiantiCoreApplication;
+use Livro\Core\AdiantiCoreTranslator;   
 use Livro\Control\ActionInterface;
 use Exception;
 use ReflectionMethod;

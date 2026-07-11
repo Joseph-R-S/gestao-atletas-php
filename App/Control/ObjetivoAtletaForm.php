@@ -16,7 +16,7 @@ use Livro\Widgets\Form\Hidden;
 use Livro\Widgets\Form\Text;
 use Livro\Widgets\Wrapper\BootstrapNotebookWrapper;
 
-class PerfilAtleta extends Page
+class ObjetivoAtletaForm extends Page
 {
     // Usamos la propiedad de la clase de manera consistente
     private FormWrapper $form;
@@ -56,7 +56,7 @@ class PerfilAtleta extends Page
             $this->form->addField('Descricao', $descricao, '9');
             $this->form->addField('Meses', $prazo_meses, '3');
             $this->form->addField('Motivo', $motivo, '9');
-
+            
             Transaction::close();
         } catch (Exception $e) {
             new Message('erro', 'erro ao carregar objetivos');
@@ -69,7 +69,7 @@ class PerfilAtleta extends Page
         if ($_GET['id']) {
             Transaction::open('livro');
             $atleta = Atletas::find((int) $_GET['id']);
-            $panel = new Panel('Perfil do atleta ' . $atleta->nome);
+            $panel = new Panel('Objetivo do atleta ' . $atleta->nome);
             Transaction::close();
         } else {
             $panel = new Panel('Perfil do atleta');

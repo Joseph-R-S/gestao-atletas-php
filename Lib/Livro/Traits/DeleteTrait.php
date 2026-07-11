@@ -13,7 +13,7 @@ trait DeleteTrait
     /**
      * Pergunta sobre a exclusão de registro
      */
-    function onDelete($param)
+    function onDelete(array $param)
     {
         $id = $param['id']; // obtém o parâmetro $id
         $action1 = new Action(array($this, 'Delete'));
