@@ -9,17 +9,14 @@ use Livro\Database\Criteria;
 use Livro\Database\Repository;
 use Livro\Widgets\Dialog\Message;
 use Livro\Database\Transaction;
-use Livro\Traits\DeleteTrait;
+use Livro\Widgets\Container\THBox;
 use Livro\Widgets\Container\TVBox;
-use Livro\Widgets\Datagrid\Datagrid;
-use Livro\Widgets\Datagrid\DatagridColumn;
 use Livro\Widgets\Dialog\Question;
 use Livro\Widgets\Form\Combo;
 use Livro\Widgets\Form\Entry;
 use Livro\Widgets\Form\Hidden;
-use Livro\Widgets\Wrapper\DatagridWrapper;
 
-class PerfilAtletaFomList extends Page
+class PerfilAtletaFom extends Page
 {
     private string $activeRecord;
     private string $connection;
@@ -43,6 +40,7 @@ class PerfilAtletaFomList extends Page
         $coxa = new Entry('coxa');
         $panturrilha = new Entry('panturrilha');
 
+        $atleta_id->setEditable(FALSE);
         $factor_actividad = new Combo('factor_actividad');
 
         $factor_actividad->addItems(PerfilAtleta::FACTORES_ACTIVIDADE);
@@ -61,29 +59,11 @@ class PerfilAtletaFomList extends Page
         $this->form_medidas->addField('Panturrilha', $panturrilha, '3');
 
         $this->form_medidas->addAction('Salvar', new Action([$this, 'onSave']));
+        $this->form_medidas->addAction('Ver historico', new Action([$this, 'onVerHistorico']), 'fa fa-history blue');
 
-        $this->datagrid = new DatagridWrapper(new Datagrid);
-
-        $data_medicao   = new DatagridColumn('data_medicao', 'Data', 'left', '15%');
-        $peso   = new DatagridColumn('peso', 'Peso', 'left', '10%');
-        $altura   = new DatagridColumn('altura', 'Altura', 'left', '10%');
-        $imc   = new DatagridColumn('imc', 'IMC', 'left', '20%');
-        $tmb = new DatagridColumn('tmb', 'TMB', 'left', '25');
-        $tmt = new DatagridColumn('tmt', 'TMT', 'left', '25');
-
-        
-        $this->datagrid->addColumn($data_medicao);
-        $this->datagrid->addColumn($peso);
-        $this->datagrid->addColumn($altura);
-        $this->datagrid->addColumn($imc);
-        $this->datagrid->addColumn($tmb);
-        $this->datagrid->addColumn($tmt);
-        
-        $delete = new TAction([$this, 'onDelete']);
-        $this->datagrid->addAction( 'Excluir',  $delete,  'id', 'fa fa-trash fa-lg text-danger', 'atleta_id');
         $box = new TVBox;
+        $box->style = 'width: 100%; display: flex;';
         $box->add($this->form_medidas);
-        $box->add($this->datagrid);
         parent::add($box);
     }
 
@@ -113,53 +93,7 @@ class PerfilAtletaFomList extends Page
 
     public function onReload()
     {
-        try {
-            $dados = $this->form_medidas->getData();
-            $dados->atleta_id = $_GET['id'];
-            if ($dados->atleta_id) {
-                Transaction::open('livro');
-                $repository = new Repository('PerfilAtleta');
-                $criteria = new Criteria;
-
-                $criteria->setProperty('order', 'id');
-
-                $criteria->add('atleta_id', '=', (int) $dados->atleta_id);
-                $atleta = new Atletas($dados->atleta_id);
-                $sexo = $atleta->sexo;
-                $data_nascimento = new DateTime($atleta->data_nascimento);
-
-                $medidas = $repository->load($criteria);
-                $this->datagrid->clear();
-                foreach ($medidas as $medida) {
-                    $nova_data = new DateTime($medida->data_medicao);
-
-                    $altura_float = $medida->altura;
-                    $altura = self::floatToIntScaled($altura_float);
-                    $medida->data_medicao = $nova_data->format('d/m/Y');
-                    $edad = $nova_data->diff($data_nascimento);
-
-                    // Caculo IMC
-                    $imc = PerfilAtleta::indiceMasaCorporal($medida->peso, $altura_float);
-
-                    //calculo da TASA METABOLICA BASAL
-                    $tmb = PerfilAtleta::tasaMetabolicaBasal($medida->peso, $altura, $edad, $sexo);
-
-                    $tmt = PerfilAtleta::tasaMetabolicaTotal($tmb, $medida->factor_actividad);
-                    $medida->tmb = $tmb;
-                    $medida->tmt = $tmt;
-                    $medida->imc = number_format($imc['imc'], 2) . ' ' . $imc['result'];
-                    $medida->altura = $altura_float;
-
-                    $tmt = PerfilAtleta::tasaMetabolicaTotal($tmb, $medida->factor_actividad);
-                    $this->datagrid->addItem($medida);
-                }
-                Transaction::close();
-            }
-            $this->loaded = true;
-        } catch (Exception $e) {
-            new Message('error', 'Erro ao recarregar histórico de medidas: ' . $e->getMessage());
-            Transaction::rollback();
-        }
+        $this->loaded = true;
     }
 
     public function onEdit(array $param)
@@ -169,7 +103,7 @@ class PerfilAtletaFomList extends Page
                 $id = $param['id'];
 
                 Transaction::open('livro');
-                $atleta = Atletas::find($id);
+                $atleta = PerfilAtleta::find($id);
                 if ($atleta) {
                     $stdObject = new \stdClass;
                     $dadosPuros = $atleta->toArray();
@@ -186,17 +120,41 @@ class PerfilAtletaFomList extends Page
         }
     }
 
-        /**
+    /**
+     * Método intermediario para capturar el ID del formulario y redirigir
+     */
+    public function onVerHistorico()
+    {
+        $dadosObj = $this->form_medidas->getData();
+        $atleta_id = $dadosObj->id ?? null;
+
+        if ($atleta_id) {
+            // Creamos una acción apuntando a la clase destino
+            $action = new \Livro\Control\Action([new PerfilHistorico, 'onVerHistorico']);
+            $action->setParameter('key', $atleta_id);
+            $action->setParameter('id', $atleta_id);
+
+            // Obtenemos la URL serializada que genera el framework (ej: index.php?class=PerfilHistorico&method=onEdit&id=...)
+            $url = $action->serialize();
+
+            header("Location: {$url}");
+            exit;
+        } else {
+            new Message('error', 'Não foi possível carregar o histórico: ID do atleta não identificado.');
+        }
+    }
+
+    /**
      * Pergunta sobre a exclusão de registro
      */
     function onDelete(array $param)
     {
+
         $id = $param['id']; // obtém o parâmetro $id
         $action1 = new Action(array($this, 'Delete'));
         $action1->setParameter('id', $id);
-        
-        new Question('Deseja realmente excluir o registro?', $action1);
 
+        new Question('Deseja realmente excluir o registro?', $action1);
         $this->onReload(); // recarrega a datagrid
     }
 
@@ -205,31 +163,21 @@ class PerfilAtletaFomList extends Page
      */
     function Delete(array $param)
     {
-        try
-        {
+        try {
             $id = $param['id']; // obtém a chave
-            Transaction::open( $this->connection ); // inicia transação com o BD
-            
+            Transaction::open($this->connection); // inicia transação com o BD
+
             $class = $this->activeRecord;
-            
+
             $object = $class::find($id); // instancia objeto
             $object->delete(); // deleta objeto do banco de dados
             Transaction::close(); // finaliza a transação
             $this->onReload(); // recarrega a datagrid
             new Message('info', "Registro excluído com sucesso");
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             new Message('error', $e->getMessage());
         }
     }
-
-    public function floatToIntScaled(float $value): int
-    {
-        $scale = 100;
-        return (int) round($value * $scale);
-    }
-
 
     public function show()
     {

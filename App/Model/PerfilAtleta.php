@@ -53,4 +53,10 @@ class PerfilAtleta extends Record
     {
         return self::FACTORES_ACTIVIDADE[$factor] ?? '';
     }
+
+    public static function floatToIntScaled(float $value): int
+    {
+        $scale = 100;
+        return (int) round($value * $scale);
+    }
 }

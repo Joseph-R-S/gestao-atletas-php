@@ -6,9 +6,11 @@ use Livro\Database\Repository;
 use Livro\Database\Transaction;
 use Livro\Traits\DeleteTrait;
 use Livro\Traits\EditTrait;
+use Livro\Widgets\Container\THBox;
 use Livro\Widgets\Container\TVBox;
 use Livro\Widgets\Datagrid\Datagrid;
 use Livro\Widgets\Datagrid\DatagridColumn;
+use Livro\Widgets\Form\Button;
 use Livro\Widgets\Form\Entry;
 use Livro\Widgets\Form\Form;
 use Livro\Widgets\Wrapper\DatagridWrapper;
@@ -52,16 +54,16 @@ class AtletaList extends Page{
 
 
         $this->datagrid->addAction( 'Editar Cadastro', new TAction([new AtletaForm, 'onEdit']), 'id', 'fa fa-edit fa-lg blue');
-        $this->datagrid->addAction( 'Excluir',  new TAction([$this, 'onDelete']),  'id', 'fa fa-trash fa-lg text-danger');
         $this->datagrid->addAction( 'Objetivo', new TAction([new ObjetivoAtletaForm, 'onEdit']), 'id', 'fa fa-line-chart fa-lg');
-        $this->datagrid->addAction( 'Medidas', new TAction([new PerfilAtletaFomList, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
+        $this->datagrid->addAction( 'Medidas', new TAction([new PerfilAtletaFom, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
+        $this->datagrid->addAction( 'Excluir',  new TAction([$this, 'onDelete']),  'id', 'fa fa-trash fa-lg text-danger');
        
-        
         $box = new TVBox;
+
         $box->style = 'width: 100%; display: block;';
+
         $box->add($this->form);
         $box->add($this->datagrid);
-        
         parent::add($box);
     }
 
