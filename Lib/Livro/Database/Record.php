@@ -7,7 +7,7 @@ use Exception;
 
 abstract class Record
 {
-    protected array $data = [];
+    protected $data = [];
     const TABLENAME = '';
 
     public function __construct(?int $id = null)
@@ -58,7 +58,7 @@ abstract class Record
         $this->data = $data;
     }
 
-    public function toArray(): array
+    public function toArray()
     {
         return $this->data;
     }
@@ -69,7 +69,7 @@ abstract class Record
         return constant("{$class}::TABLENAME");
     }
 
-    public function load(int $id): ?object
+    public function load(int $id)
     {
         $object = null;
         $sql = "SELECT * FROM {$this->getEntity()} WHERE id=" . (int) $id;
@@ -166,7 +166,7 @@ abstract class Record
         }
     }
 
-    public static function find(int $id): object
+    public static function find(int $id)
     {
         $class_name = get_called_class();
         $ar = new $class_name;

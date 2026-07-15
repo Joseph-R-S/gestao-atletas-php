@@ -72,12 +72,12 @@
             <!--SIDEBAR-->
             <aside class="sidebar-links p-3 flex-grow-1 overflow-auto wrapper">
                 <ul class="nav nav-pills flex-column gap-1">
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3" style="font-size: small;"
-                            href="index.php?class=AtletaList"><i class="fa fa-users me-3 text-center"
-                                style="width:10px;"></i>Atletas</a></li>
-                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3" style="font-size: small;"
-                            href="index.php?class=ObjetivosList"><i class="fa fa-tasks me-3 text-center"
-                                style="width:10px;"></i>Objetivos</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            style="font-size: small;" href="index.php?class=AtletaList"><i
+                                class="fa fa-users me-3 text-center" style="width:10px;"></i>Atletas</a></li>
+                    <li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3"
+                            style="font-size: small;" href="index.php?class=ObjetivosList"><i
+                                class="fa fa-tasks me-3 text-center" style="width:10px;"></i>Objetivos</a></li>
                     <!--<li class="nav-item"><a class="nav-link link-light d-flex align-items-center py-2 px-3" style="font-size: small;"
                             href="index.php?class=Atle"><i class="fa fa-tasks me-3 text-center"
                                 style="width:10px;"></i>Form Notebook</a></li>-->
@@ -90,7 +90,11 @@
 
             <!-- Navbar: quitamos fixed-top para que fluya correctamente al empujar el contenido -->
             <nav class="navbar navbar-expand-md navbar-light bg-primary border-bottom" style="height: 63px;">
-                <div class="container-fluid">
+                <div class="container-fluid d-flex gap-1">
+
+                    <button type="button" class="btn btn-secondary btn-sm px-3" onclick="window.history.back();">
+                        <i class="fa fa-arrow-left"></i> Voltar
+                    </button>
 
                     <!-- Botón corregido para accionar la función JS personalizada -->
                     <button class="btn btn-primary border border-white btn-sm px-3 d-block d-md-inline-block"
@@ -98,10 +102,10 @@
                         ☰ Menú
                     </button>
 
-                    <!--<a class="navbar-brand fs-6 ms-2 ms-md-0 text-white"
+                    <a class="navbar-brand fs-6 ms-2 ms-md-0 text-white"
                         href="index.php?class=ViewSource&method=onView&source={class}">
                         <i class="fa fa-code me-1"></i> Código-fonte
-                    </a>-->
+                    </a>
 
                     <button class="navbar-toggler d-md-none text-white border-white" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent"

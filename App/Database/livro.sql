@@ -11,3 +11,5 @@ CREATE TABLE atletas (
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+

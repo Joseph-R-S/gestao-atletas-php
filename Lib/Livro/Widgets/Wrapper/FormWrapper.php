@@ -100,24 +100,18 @@ class FormWrapper
             }
         }
 
-        // Também adicionamos 'd-flex gap-2' para que os botões fiquem alinhados lado a lado perfeitamente sem colar.
         $footer = new Element('div');
         $footer->class = 'offset-sm-1 col-sm-10 d-flex gap-2';
-
         foreach ($this->decorated->getAction() as $label => $action) {
             $name = strtolower(str_replace(' ', '_', $label));
             $button = new Button($name);
 
-            // Removido 'me-2' das propriedades do botão, pois o 'gap-2' do container pai ($footer) já cuida do espaço de forma moderna.
-            if ($label === 'Buscar') {
-                $button->setProperty('class', 'btn btn-success');
-            } elseif ($label === 'Novo') {
-                $button->setProperty('class', 'btn btn-outline-secondary');
+            $customClass = $action->getProperty('class');
+            if ($customClass) {
+                $button->setProperty('class', $customClass);
             } else {
                 $button->setProperty('class', 'btn btn-primary');
             }
-
-
 
             $button->setAction($action, $label);
             $button->setFormName($this->decorated->getName());

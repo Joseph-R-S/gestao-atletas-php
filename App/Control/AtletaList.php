@@ -52,10 +52,9 @@ class AtletaList extends Page{
         $this->datagrid->addColumn($cell_phone);
         $this->datagrid->addColumn($email);
 
-
         $this->datagrid->addAction( 'Editar Cadastro', new TAction([new AtletaForm, 'onEdit']), 'id', 'fa fa-edit fa-lg blue');
         $this->datagrid->addAction( 'Objetivo', new TAction([new ObjetivoAtletaForm, 'onEdit']), 'id', 'fa fa-line-chart fa-lg');
-        $this->datagrid->addAction( 'Medidas', new TAction([new PerfilAtletaFom, 'onEdit']), 'id', 'fa fa-eye fa-lg blue');
+        $this->datagrid->addAction( 'Medidas', new TAction([new PerfilAtletaFom, 'onSetMedidas']), 'id', 'fa fa-eye fa-lg blue');
         $this->datagrid->addAction( 'Excluir',  new TAction([$this, 'onDelete']),  'id', 'fa fa-trash fa-lg text-danger');
        
         $box = new TVBox;

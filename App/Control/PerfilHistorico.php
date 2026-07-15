@@ -1,9 +1,12 @@
 <?php
 
+use Livro\Control\Action;
 use Livro\Control\Page;
+use Livro\Control\TAction;
 use Livro\Database\Criteria;
 use Livro\Database\Repository;
 use Livro\Database\Transaction;
+use Livro\Traits\DeleteTrait;
 use Livro\Widgets\Container\TVBox;
 use Livro\Widgets\Datagrid\Datagrid;
 use Livro\Widgets\Datagrid\DatagridColumn;
@@ -12,6 +15,7 @@ use Livro\Widgets\Wrapper\DatagridWrapper;
 
 class PerfilHistorico extends Page
 {
+    use DeleteTrait;
     public function __construct()
     {
         parent::__construct();
@@ -32,10 +36,35 @@ class PerfilHistorico extends Page
         $this->datagrid->addColumn($tmb);
         $this->datagrid->addColumn($tmt);
 
+        $this->datagrid->addAction('Medidas', new TAction([$this, 'onVerMedidas']), 'id', 'fa fa-eye fa-lg blue');
         $box = new TVBox;
-        $box->style = 'width: 100%; display: flex;';
         $box->add($this->datagrid);
         parent::add($box);
+    }
+
+    public function onVerMedidas()
+    {
+
+        $id = (int) $_GET['id'];
+        var_dump($id);
+        if ($id) {
+            Transaction::open('livro');
+            $perfil = new PerfilAtleta($id);
+            // Creamos una acción apuntando a la clase destino
+            $action = new Action([new PerfilAtletaFom, 'onEdit']);
+            $action->setParameter('key', $id);
+            $action->setParameter('id', $perfil->atleta_id);
+
+            // Obtenemos la URL serializada que genera el framework (ej: index.php?class=PerfilHistorico&method=onEdit&id=...)
+            $url = $action->serialize();
+
+            header("Location: {$url}");
+            Transaction::close();
+            exit;
+        } else {
+            Transaction::rollback();
+            new Message('error', 'Não foi possível carregar o histórico: ID do atleta não identificado.');
+        }
     }
 
     public function onVerHistorico(array $param)
@@ -59,7 +88,7 @@ class PerfilHistorico extends Page
                 $medidas = $repository->load($criteria);
                 foreach ($medidas as $medida) {
                     $nova_data = new DateTime($medida->data_medicao);
-                    
+
                     $altura_float = $medida->altura;
                     $altura = PerfilAtleta::floatToIntScaled($altura_float);
                     $medida->data_medicao = $nova_data->format('d/m/Y');
