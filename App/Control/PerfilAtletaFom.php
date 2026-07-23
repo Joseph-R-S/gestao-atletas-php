@@ -162,7 +162,7 @@ class PerfilAtletaFom extends Page
 
         if ($atleta_id) {
             // Creamos una acción apuntando a la clase destino
-            $this->PageDestino('PerfilHistorico', 'onVerHistorico', $atleta_id, $atleta_id);
+            Page::pageDestino('PerfilHistorico', 'onVerHistorico', $atleta_id, $atleta_id);
         } else {
             new Message('error', 'Não foi possível carregar o histórico: ID do atleta não identificado.');
         }
@@ -199,23 +199,10 @@ class PerfilAtletaFom extends Page
             $object->delete(); // deleta objeto do banco de dados
             Transaction::close(); // finaliza a transação
 
-            $this->PageDestino('PerfilHistorico', 'onVerHistorico', $param['key'], $param['id']);
+            Page::pageDestino('PerfilHistorico', 'onVerHistorico', $param['key'], $param['id']);
         } catch (Exception $e) {
             new Message('error', $e->getMessage());
         }
-    }
-
-    public function PageDestino(string $class, string $metodo, string $key, string $id)
-    {
-        $action = new Action([new $class, $metodo]);
-        $action->setParameter('key', $key);
-        $action->setParameter('id', $id);
-
-        // Obtenemos la URL serializada que genera el framework (ej: index.php?class=PerfilHistorico&method=onEdit&id=...)
-        $url = $action->serialize();
-
-        header("Location: {$url}");
-        exit;
     }
 
     public function show()

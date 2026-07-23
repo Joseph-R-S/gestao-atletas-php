@@ -32,18 +32,14 @@ class Panel extends Element
         parent::add($this->body);
 
         $this->footer = new Element('div');
-        // 🏁 CORREÇÃO BS5: 'panel-footer' se convierte en 'card-footer bg-white border-top-0 p-3'
-        // 'border-top-0' remueve la línea tosca y 'bg-white' mantiene la continuidad si el body es blanco
         $this->footer->class = 'card-footer bg-white border-top-1 p-2';
     }
 
     public function setTitle(string $panel_title) : void
     {
         $head = new Element('div');
-        // 'panel-heading' se convierte en 'card-header bg-light py-3'
         $head->class = 'card-header bg-light py-3';
 
-        // 'h5' con clases de tipografía se ve más estilizado y limpio que un h4 plano
         $label = new Element('h5');
         $label->class = 'card-title mb-0 text-secondary fw-bold';
         $label->add($panel_title);
@@ -68,7 +64,7 @@ class Panel extends Element
     /**
      * Adiciona rodapé
      */
-    public function addFooter(Element $footer)
+    public function addFooter(mixed $footer)
     {
         $this->footer->add($footer);
         parent::add($this->footer);

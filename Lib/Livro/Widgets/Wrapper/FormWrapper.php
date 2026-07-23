@@ -84,13 +84,11 @@ class FormWrapper
                 $group->add($label);
                 $group->add($field);
 
-                // TEXTO DE AYUDA (Removido el bloque duplicado de abajo que causaba conflictos)
                 $helpText = $field->getProperty('form-text');
                 if ($helpText) {
                     $helpElement = new Element('div');
                     $helpElement->class = 'form-text text-muted small mt-1';
                     $helpElement->add($helpText);
-
                     $field->setProperty('aria-describedby', 'help_' . $field->getName());
                     $helpElement->id = 'help_' . $field->getName();
                     $group->add($helpElement);
@@ -112,7 +110,6 @@ class FormWrapper
             } else {
                 $button->setProperty('class', 'btn btn-primary');
             }
-
             $button->setAction($action, $label);
             $button->setFormName($this->decorated->getName());
             $footer->add($button);

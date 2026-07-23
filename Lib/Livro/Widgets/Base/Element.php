@@ -10,6 +10,33 @@ class Element {
         $this->tagname = $tagname;
     }
 
+    public static function tag($tagname, $value, $attributes = NULL)
+    {
+        $object = new Element($tagname);
+        
+        if (is_array($value))
+        {
+            foreach ($value as $element)
+            {
+                $object->add($element);
+            }
+        }
+        else
+        {
+            $object->add($value);
+        }
+        
+        if ($attributes)
+        {
+            foreach ($attributes as $att_name => $att_value)
+            {
+                $object->$att_name = $att_value;
+            }
+        }
+        
+        return $object;
+    }
+
     public function __set(string $name, mixed $value) {
         $this->properties[$name] = $value;
     }

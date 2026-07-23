@@ -83,5 +83,9 @@ class Form
         }
         return $object;
     }
+
+    public function clear(){
+        
+    }
 }
 ?>

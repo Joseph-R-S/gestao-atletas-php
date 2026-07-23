@@ -8,6 +8,7 @@ use Livro\Widgets\Datagrid\DatagridColumn;
 use Livro\Widgets\Datagrid\DatagridWrapper;
 use Livro\Traits\DeleteAndReloadTrait; // 💡 Importamos tu nuevo Trait
 
+
 class FuncionarioList extends Page
 {
     private DatagridWrapper $datagrid;

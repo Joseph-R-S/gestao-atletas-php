@@ -6,20 +6,14 @@ use Livro\Control\Page;
 use Livro\Widgets\Datagrid\Datagrid;
 use Livro\Widgets\Datagrid\DatagridColumn;
 use Livro\Widgets\Wrapper\DatagridWrapper;
-use Livro\Widgets\Dialog\MessageSweetAlert;
-use Livro\Widgets\Dialog\Question;
-use Livro\Database\Transaction;
-use Livro\Database\Criteria;
-use Livro\Database\Repository;
-use Livro\Widgets\Container\Vbox;
 use Livro\Widgets\Form\Entry;
 use Livro\Widgets\Form\Form;
 use Livro\Widgets\Wrapper\FormWrapper;
-
 use Livro\Traits\DeleteTrait;
 use Livro\Traits\ReloadTrait;
 use Livro\Traits\SaveTrait;
 use Livro\Traits\EditTrait;
+use Livro\Widgets\Container\TVBox;
 
 class FormularioBuscaList extends Page
 {
@@ -45,7 +39,7 @@ class FormularioBuscaList extends Page
         parent::__construct();
 
         $this->connection   = 'livro';
-        $this->activeRecord = Funcionario::class;
+        $this->activeRecord = 'Funcionario';
 
         //instacia formulario
         $this->form = new FormWrapper(new Form('form_busca_funvionarios'));
@@ -85,7 +79,7 @@ class FormularioBuscaList extends Page
         */
         $this->datagrid->addAction('Deletar', new Action([$this, 'onDelete']), 'id');
         //instacio uma caixa vertical
-        $box = new Vbox;
+        $box = new TVBox;
         $box->style = 'display:block margin: 20px';
         //adiciono o form a caixa e o datagrid
         $box->add($this->form);

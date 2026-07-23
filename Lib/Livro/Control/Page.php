@@ -11,6 +11,17 @@ class Page extends Element
         parent::__construct('div');
     }
 
+    public function pageDestino(string $class, ?string $metodo, ?string $key = null, ?string $id = null)
+    {
+        $action = new Action([new $class, $metodo]);
+        $action->setParameter('key', $key);
+        $action->setParameter('id', $id);
+        $url = $action->serialize();
+
+        header("Location: {$url}");
+        exit;
+    }
+
     public function show()
     {
         if ($_GET) {
@@ -21,4 +32,5 @@ class Page extends Element
         }
         parent::show();
     }
+
 }

@@ -58,9 +58,7 @@ class AtletaList extends Page{
         $this->datagrid->addAction( 'Excluir',  new TAction([$this, 'onDelete']),  'id', 'fa fa-trash fa-lg text-danger');
        
         $box = new TVBox;
-
         $box->style = 'width: 100%; display: block;';
-
         $box->add($this->form);
         $box->add($this->datagrid);
         parent::add($box);
