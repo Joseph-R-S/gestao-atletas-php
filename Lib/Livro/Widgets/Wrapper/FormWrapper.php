@@ -77,8 +77,6 @@ class FormWrapper
                     $field->setProperty('class', 'visually-hidden');
                     $label->class = 'visually-hidden';
                     $group->class = 'visually-hidden';
-                } else {
-                    $field->setProperty('class', 'form-control');
                 }
 
                 $group->add($label);
@@ -110,6 +108,12 @@ class FormWrapper
             } else {
                 $button->setProperty('class', 'btn btn-primary');
             }
+
+            // Si la acción tiene una propiedad o método para saber si es Ajax
+            if (method_exists($action, 'isAjax') && $action->isAjax()) {
+                $button->setAjax(true);
+            }
+
             $button->setAction($action, $label);
             $button->setFormName($this->decorated->getName());
             $footer->add($button);

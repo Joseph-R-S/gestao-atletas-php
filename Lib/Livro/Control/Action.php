@@ -28,6 +28,19 @@ class Action implements ActionInterface
         return $this->properties[$property] ?? null;
     }
 
+    private bool $isAjax = false;
+
+    public function setAjax(bool $isAjax = true): self
+    {
+        $this->isAjax = $isAjax;
+        return $this; // Permite el encadenamiento (method chaining)
+    }
+
+    public function isAjax(): bool
+    {
+        return $this->isAjax;
+    }
+
     //transforma a ação em uma string tipo url
     public function serialize()
     {

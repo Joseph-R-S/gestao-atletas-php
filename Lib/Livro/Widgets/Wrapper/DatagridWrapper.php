@@ -26,12 +26,21 @@ class DatagridWrapper
         $this->decorated->$atibute = $value;
     }
 
-public function show(): void
+    public function show(): void
     {
         // 1. Instanciamos la tabla tal como lo tenías
         $element = new Element('table');
         $element->class = 'table table-striped table-hover';
-        //class=""
+
+        $properties = $this->decorated->getProperty();
+        if (!empty($properties)) {
+            foreach ($properties as $name => $value) {
+                // Asigna atributos como id, class, data-target, etc.
+                $element->$name = $value;
+                // O si tu clase Element usa setProperty/setAttribute:
+                // $element->setProperty($name, $value);
+            }
+        }
         $thead = new Element('thead');
         $element->add($thead);
 
@@ -48,7 +57,7 @@ public function show(): void
 
         $responsiveDiv = new Element('div');
         $responsiveDiv->class = 'table-responsive';
-        
+
         // Metemos la tabla adentro del div responsivo
         $responsiveDiv->add($element);
 

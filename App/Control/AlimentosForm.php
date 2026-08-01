@@ -32,7 +32,7 @@ class AlimentosForm extends Page
 
         $id = new Entry('id');
         $nome = new Entry('nome');
-        $porcao = new Combo('porcao');
+        $medida = new Combo('medida');
         $quantidade = new Entry('quantidade');
         $calorias = new Entry('calorias');
         $proteinas = new Entry('proteinas');
@@ -42,7 +42,7 @@ class AlimentosForm extends Page
         $tipo = new Combo('tipo');
 
         $id->setEditable(FALSE);
-        $porcao->addItems(Alimentos::PORCAO);
+        $medida->addItems(Alimentos::PORCAO);
         $tipo->addItems(Alimentos::TIPO);
 
         $this->form->setTitle('Alimentos');
@@ -50,7 +50,7 @@ class AlimentosForm extends Page
         $this->form->addField('Id', $id, '12');
         $this->form->addField('Tipo', $tipo, '4');
         $this->form->addField('Nome', $nome, '4');
-        $this->form->addField('Porção', $porcao, '4');
+        $this->form->addField('Medida', $medida, '4');
         $this->form->addField('Quantidade', $quantidade, '4');
         $this->form->addField('Calorias', $calorias, '4');
         $this->form->addField('Proteinas', $proteinas, '4');

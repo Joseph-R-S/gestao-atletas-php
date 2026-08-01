@@ -32,7 +32,7 @@ public function show(): void
 
                 // Contenedor individual de la opción
                 $wrapper = new Element('div');
-                $wrapper->class = 'form-check mb-0';
+                $wrapper->class = 'd-flex flex-wrap gap-3 mt-2';
 
                 $radio = new Element('input');
                 $radio->type  = 'radio';

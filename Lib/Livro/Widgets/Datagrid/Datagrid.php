@@ -9,12 +9,14 @@ class Datagrid
     private array $columns = [];
     private array $items = [];
     private array $actions = [];
+    private $properties = [];
 
     public function __construct()
     {
         $this->columns = [];
         $this->actions = [];
         $this->items = [];
+        $this->properties = [];
     }
 
     //metodo para adicionar una Columna 
@@ -48,13 +50,23 @@ class Datagrid
         return $this->items;
     }
 
-    public function getActions() : array
+    public function getActions(): array
     {
         return $this->actions;
     }
 
-    public function clear() : void
+    public function clear(): void
     {
         $this->items = [];
+    }
+
+    public function setProperty(string $property, mixed $value): void
+    {
+        $this->properties[$property] = $value;
+    }
+
+    public function getProperty(): mixed
+    {
+        return $this->properties;
     }
 }

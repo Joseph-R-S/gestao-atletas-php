@@ -8,6 +8,7 @@ use Livro\Database\Criteria;
 use Livro\Database\Repository;
 use Livro\Widgets\Dialog\Message;
 use Livro\Database\Transaction;
+use Livro\Session\Session;
 use Livro\Widgets\Container\TVBox;
 use Livro\Widgets\Dialog\Question;
 use Livro\Widgets\Form\Combo;
@@ -25,7 +26,7 @@ class PerfilAtletaFom extends Page
         parent::__construct();
         $this->activeRecord = 'PerfilAtleta';
         $this->connection = 'livro';
-
+        new Session;
         $this->form_medidas = new FormWrapper((new Form('form_medidas')));
         $key = new Hidden('key');
         $atleta_id    = new Entry('id');
@@ -39,8 +40,9 @@ class PerfilAtletaFom extends Page
         $panturrilha = new Entry('panturrilha');
 
         $atleta_id->setEditable(FALSE);
-        $atleta_id->setValue($_GET['id']);
-        $key->setValue($_GET['key']);
+
+        $id = $_GET['id'] ?? null;
+        $atleta_id->setValue($id);
         $factor_actividad = new Combo('factor_actividad');
 
         $factor_actividad->addItems(PerfilAtleta::FACTORES_ACTIVIDADE);
@@ -59,9 +61,14 @@ class PerfilAtletaFom extends Page
         $this->form_medidas->addField('Panturrilha', $panturrilha, '3');
 
         $this->form_medidas->addAction('Salvar', new Action([$this, 'onSave']));
+
         $ver_historico = new Action([$this, 'onVerHistorico']);
         $ver_historico->setProperty('class', 'btn btn-info');
         $this->form_medidas->addAction('Ver historico', $ver_historico);
+
+        $ir_dieta = new Action([$this, 'onIrDieta']);
+        $ir_dieta->setProperty('class', 'btn btn-success');
+        $this->form_medidas->addAction('Criar Dieta', $ir_dieta);
 
         $box = new TVBox;
         $box->style = 'width: 100%; display: flex;';
@@ -103,23 +110,24 @@ class PerfilAtletaFom extends Page
         try {
             if (isset($param['id'])) {
                 $id = $param['id'];
+                $key = $param['key'];
                 Transaction::open('livro');
                 $repository = new Repository('PerfilAtleta');
                 $criteria = new Criteria;
                 $criteria->add('atleta_id', '=', (int) $id);
 
-                $medidas = $repository->load($criteria);
-                if ($medidas) {
-                    $medida = end($medidas);
-                    $medida->id = '';
+                $perfils = $repository->load($criteria);
+                if ($perfils) {
+                    $perfil = end($perfils);
+                    $perfil->id = '';
                     $stdObject = new \stdClass;
-                    $dadosPuros = $medida->toArray();
+                    $dadosPuros = $perfil->toArray();
                     foreach ($dadosPuros as $campo => $valor) {
-                        $stdObject->$campo = $medida->$campo;
+                        $stdObject->$campo = $perfil->$campo;
                     }
+                    $stdObject->key = $key;
                     $this->form_medidas->setData($stdObject);
                 }
-                Transaction::close();
             }
         } catch (Exception $e) {
             new Message('erro', 'Erro ao buscar atleta');
@@ -140,6 +148,7 @@ class PerfilAtletaFom extends Page
                         $stdObject->$campo = $atleta->$campo;
                     }
                     $stdObject->id = $atleta->atleta_id;
+                    $stdObject->key = $key;
                     $this->form_medidas->setData($stdObject);
                 }
                 $excluir = new Action([$this, 'onDelete']);
@@ -158,6 +167,7 @@ class PerfilAtletaFom extends Page
     public function onVerHistorico()
     {
         $dadosObj = $this->form_medidas->getData();
+
         $atleta_id = $dadosObj->id ?? null;
 
         if ($atleta_id) {
@@ -174,7 +184,6 @@ class PerfilAtletaFom extends Page
     function onDelete()
     {
         $dados = $this->form_medidas->getData();
-
         $id = $dados->id;
         $key = $dados->key; // obtém o parâmetro $id
         $action1 = new Action([$this, 'Delete']);
@@ -192,7 +201,6 @@ class PerfilAtletaFom extends Page
         try {
             $key = $param['key']; // obtém a chave
             Transaction::open($this->connection); // inicia transação com o BD
-            var_dump($param);
             $class = $this->activeRecord;
 
             $object = $class::find($key); // instancia objeto
@@ -202,6 +210,65 @@ class PerfilAtletaFom extends Page
             Page::pageDestino('PerfilHistorico', 'onVerHistorico', $param['key'], $param['id']);
         } catch (Exception $e) {
             new Message('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Redirige a la pantalla de creación de dietas pasando el ID del atleta
+     */
+    public function onIrDieta()
+    {
+        $dadosObj = $this->form_medidas->getData();
+        $atleta_id = $dadosObj->id ?? null;
+        $atleta_session = Session::getValue('atleta_dieta');
+        if ($atleta_id) {
+            try {
+                Transaction::open('livro');
+
+                // 1. Buscamos el registro del atleta
+                $atleta = Atletas::find($atleta_id);
+
+                if (!$atleta) {
+                    throw new Exception("Atleta não encontrado no sistema.");
+                } elseif ($atleta_session->id_atleta == $atleta->id) {
+                    Session::setValue('atleta_dieta', $atleta_session);
+                } else {
+                    // 2. Preparamos la estructura de sesión del atleta
+                    $atleta_session = new \stdClass;
+                    $atleta_session->id_atleta         = $atleta->id;
+                    $atleta_session->nome              = $atleta->nome;
+                    $atleta_session->factor_actividade = $dadosObj->factor_actividad ?? null;
+                    $atleta_session->peso              = $dadosObj->peso ?? null;
+                    $atleta_session->altura            = $dadosObj->altura ?? null;
+
+                    // 3. Calculamos TMB/TMT si tenemos los datos completos
+                    if (!empty($dadosObj->peso) && !empty($dadosObj->altura) && !empty($dadosObj->factor_actividad)) {
+                        $data_nascimento = new DateTime($atleta->data_nascimento);
+                        $edad = $data_nascimento->diff(new DateTime('now'));
+
+                        $altura_scaled = PerfilAtleta::floatToIntScaled($dadosObj->altura);
+                        $tmb = PerfilAtleta::tasaMetabolicaBasal($dadosObj->peso, $altura_scaled, $edad, $atleta->sexo);
+                        $tmt = PerfilAtleta::tasaMetabolicaTotal($tmb, $dadosObj->factor_actividad);
+
+                        $atleta_session->tasa_metabolica = number_format((float)$tmt, 2, '.', '');
+                    } else {
+                        $atleta_session->tasa_metabolica = '0.00';
+                    }
+                }
+
+                // 4. Guardamos en la sesión
+                Session::setValue('atleta_dieta', $atleta_session);
+
+                Transaction::close();
+
+                // 5. Redirigimos a la página de la dieta
+                Page::pageDestino('DietaForm', 'onSetDieta', $atleta_id, $atleta_id);
+            } catch (Exception $e) {
+                Transaction::rollback();
+                new Message('error', 'Erro ao preparar dados da dieta: ' . $e->getMessage());
+            }
+        } else {
+            new Message('error', 'Selecione um atleta válido antes de montar a dieta.');
         }
     }
 

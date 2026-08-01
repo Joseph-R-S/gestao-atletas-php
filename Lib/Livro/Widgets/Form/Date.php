@@ -10,7 +10,7 @@ class Date extends Field implements FormElementInterface
     {
         // 1. Instanciamos la etiqueta HTML de tipo input
         $tag = new Element('input');
-        $tag->class = 'field';
+        $tag->class = 'form-control';
         $tag->type = 'date';
         $tag->name = $this->name;
         $tag->value = $this->value;

@@ -15,11 +15,12 @@ class Entry extends Field implements FormElementInterface
         $tag->name = $this->name;
         $tag->value = $this->value;
         $tag->id = $this->name;
-        
 
         // 2. Verificamos si el campo es editable (usando $this de forma directa)
         if (!$this->getEditable()) {
             $tag->readonly = '1';
+            $tag->class = 'form-control bg-body-secondary'; 
+            
         }
 
         // 3. Cargamos las propiedades HTML dinámicas adicionales (como maxlenght,placeholder, etc.)

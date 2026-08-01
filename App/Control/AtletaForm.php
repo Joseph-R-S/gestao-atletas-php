@@ -22,7 +22,10 @@ class AtletaForm extends Page
         $this->form->setTitle('Cadastro do Atleta');
 
         $id    = new Entry('id');
+        $id->id = 'id_atleta';
+        $id->onchange = "App.ejecutar('index.php?class=AtletaForm&method=onBuscaAtleta', {id_atleta: this.value})";
         $nome    = new Entry('nome');
+        $nome->id = 'nome_atleta';
         $email    = new Entry('email');
         $telefone    = new Entry('telefone');
         $data_nascimento = new Date('data_nascimento');
@@ -100,6 +103,70 @@ class AtletaForm extends Page
             }
         } catch (Exception $e) {
             new Message('erro', 'Erro ao buscar atleta');
+        }
+    }
+
+    public function onBuscaAtleta()
+    {
+        try {
+            // Obtener el término de búsqueda enviado por GET o POST
+            $id_atleta = $_POST['id_atleta'] ?? $_GET['id_atleta'] ?? null;
+
+            if (empty($id_atleta)) {
+                throw new \Exception("ID o nombre de atleta no proporcionado.");
+            }
+
+            Transaction::open('livro'); // Abre la conexión
+
+            // Buscar el registro en la base de datos
+            $atleta = Atletas::find($id_atleta);
+
+            Transaction::close(); // Cierra la conexión
+
+            if ($atleta) {
+                // Preparamos los datos del atleta en un array/objeto
+                $datosAtleta = [
+                    'id'       => $atleta->id,
+                    'nome'     => $atleta->nome,
+                    'peso'     => $atleta->peso,
+                    'altura'   => $atleta->altura,
+                    'idade'    => $atleta->idade,
+                    'objetivo' => $atleta->objetivo ?? 'No definido'
+                ];
+
+                // Retornamos la instrucción Ajax en JSON
+                $respuesta = [
+                    // Acción 1: Imprimir en la consola JS (para inspeccionar los datos)
+                    [
+                        'tipo'   => 'executeJS',
+                        //'script' => "console.log('Atleta encontrado:', " . json_encode($datosAtleta) . ");"
+                    ],
+                    // Acción 2: Autocompletar el campo 'nome' del formulario
+                    [
+                        'tipo'   => 'setValue',
+                        'target' => 'nome_atleta',
+                        'data'   => $atleta->nome
+                    ]
+                ];
+            } else {
+                throw new \Exception("Atleta con ID {$id_atleta} no fue encontrado.");
+            }
+
+            header('Content-Type: application/json');
+            echo json_encode($respuesta);
+            exit;
+
+        } catch (\Throwable $e) {
+            Transaction::rollback();
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                [
+                    'tipo'   => 'executeJS',
+                    'script' => "console.error('Error al buscar atleta:', '" . addslashes($e->getMessage()) . "');"
+                ]
+            ]);
+            exit;
         }
     }
 }

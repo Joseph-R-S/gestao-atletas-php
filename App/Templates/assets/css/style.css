@@ -1,8 +1,10 @@
 /* Pequenos ajustes finos que o Bootstrap deixa livre para o desenvolvedor */
-body, html {
+body,
+html {
     height: 100%;
     margin: 0;
-    background-color: #e5e5e5; /* Cor cinza de fundo do painel */
+    background-color: #e5e5e5;
+    /* Cor cinza de fundo do painel */
 }
 
 .sidebar-links a {
@@ -16,3 +18,45 @@ body, html {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Estructura base fluida para Escritorio */
+.sidebar-wrapper-b5 {
+    width: 200px;
+    min-width: 200px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+    transition: margin-left 0.3s ease;
+}
+
+.main-panel-b5 {
+    transition: margin-left 0.3s ease;
+}
+
+/* En escritorio: Si se activa la clase, se esconde hacia la izquierda */
+.sidebar-hidden .sidebar-wrapper-b5 {
+    margin-left: -200px;
+}
+
+/* Estilos exclusivos para pantallas pequeñas (móviles y tablets) */
+@media (max-width: 767.98px) {
+    .sidebar-wrapper-b5 {
+        position: fixed;
+        left: 0;
+        margin-left: -200px;
+        /* Oculto por defecto en móvil */
+        z-index: 1050;
+    }
+
+    /* En móviles, cuando se activa, se muestra deslizándose desde la izquierda */
+    .sidebar-show-mobile .sidebar-wrapper-b5 {
+        margin-left: 0;
+    }
+}
+
+input[readonly],
+textarea[readonly] {
+    background-color: var(--bs-secondary-bg, #e9ecef) !important;
+    opacity: 0.8;
+    cursor: not-allowed;
+}

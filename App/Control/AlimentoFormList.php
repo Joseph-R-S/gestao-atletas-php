@@ -70,8 +70,6 @@ class AlimentoFormList extends Page
         $panel->add($this->form);
         $panel->add($this->datagrid);
         $panel->addFooter($this->pageNavigation);
-        //$box->add($this->datagrid);
-        //$box->add($this->pageNavigation);
         parent::add($panel);
     }
 

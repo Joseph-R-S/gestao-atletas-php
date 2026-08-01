@@ -66,7 +66,7 @@ CREATE TABLE alimentos (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     -- Define se a porcao g/ml/unid
-    porcao CHAR(3),
+    medida CHAR(3),
     -- Define a quantidade 100/100/1
     quantidade INT,
     -- Definimos que los macros son por cada 100g de referencia
@@ -78,6 +78,39 @@ CREATE TABLE alimentos (
     -- Tipo: (Proteína), (Carbohidrato), (Grasa), (Proteina Vegetal), (Otro)
     tipo CHAR(20), 
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE dietas (
+    id SERIAL PRIMARY KEY,
+    atleta_id INT NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    peso DECIMAL(5,2) NOT NULL,     -- Peso do atleta ao momento de criar a dieta
+    altura DECIMAL(5,2) NOT NULL,
+    tasa_metabolica_total DECIMAL(7,2) NOT NULL,       -- TMT
+    objetivo_id VARCHAR(20),                        -- Descripción o ID del objetivo
+    ajus_obj_consumo DECIMAL(7,2) DEFAULT 0,         -- +/- Ajuste en kcal
+    ajus_obj_proteinas DECIMAL(4,2) DEFAULT 2.0,      -- g/kg
+    ajus_obj_gorduras DECIMAL(4,2) DEFAULT 1.0,       -- g/kg
+    status VARCHAR(20) DEFAULT 'ativa',          -- 'ativa', 'historico', 'rascunho'
+    
+    CONSTRAINT fk_dietas_atleta FOREIGN KEY (atleta_id) REFERENCES atletas(id) ON DELETE CASCADE
+);
+
+-- TABLA DETALHE: Registra os alimentos específicos de cada comida
+CREATE TABLE dieta_itens (
+    id SERIAL PRIMARY KEY,
+    dieta_id INT NOT NULL,
+    alimento_id INT NOT NULL,
+    refeicao_id INT NOT NULL,                    -- 0=Café, 1=Lanche, 2=Almoço...
+    nome_refeicao VARCHAR(50) NOT NULL,          -- Para evitar JOINs constantes al listar
+    quantidade DECIMAL(7,2) NOT NULL,            -- Cantidad en gramos o unidades
+    calorias DECIMAL(7,2) NOT NULL,              -- Calorías ya calculadas para esa cantidad
+    proteinas DECIMAL(7,2) NOT NULL,             -- Proteínas calculadas
+    gorduras DECIMAL(7,2) NOT NULL,              -- Grasas calculadas
+    carbohidratos DECIMAL(7,2) NOT NULL,         -- Carbohidratos calculados
+    
+    CONSTRAINT fk_dieta_itens_dieta FOREIGN KEY (dieta_id) REFERENCES dietas(id) ON DELETE CASCADE,
+    CONSTRAINT fk_dieta_itens_alimento FOREIGN KEY (alimento_id) REFERENCES alimentos(id)
 );
 
 
