@@ -42,6 +42,7 @@ class DietaForm extends Page
         $tipo       = new Combo('tipo');
         $alimentos  = new Combo('alimentos');
         $quantidade = new Entry('quantidade');
+        $observacao = new Entry('observacao');
 
         //
         $tot_calorias  = new Entry('tot_calorias');
@@ -69,7 +70,7 @@ class DietaForm extends Page
         $ajus_obj_proteinas->setProperty('placeholder', '0.8 a 2.4 por kg de peso');
         $ajus_obj_gorduras->setProperty('placeholder', '0.7 a 1.2 por kg de peso');
         $ajus_obj_carbohidratos->setProperty('placeholder', 'ocupan as calorías sobrantes');
-
+        $observacao->setProperty('placeholder', 'Exemplo: Grelhado sem óleo, Opción B: 3 huevos enteros');
         // Dispara la función Ajax al cambiar la opcion del combo 'Tipo'
         $tipo->setProperty('onchange', "App.ejecutar('index.php?class=DietaForm&method=onCarregarAlimentos', {tipo: this.value})");
         $alimentos->setProperty('onchange', "App.ejecutar('index.php?class=DietaForm&method=onCarregarQuantidade', {alimentos: this.value})");
@@ -95,13 +96,15 @@ class DietaForm extends Page
         $this->form->addField('Total Carbos(g)', $tot_carb, '3');
 
         $this->form->addField('Ajuste de calorias', $ajus_obj_consumo, '3');
-        $this->form->addField('Ajuste segun objetivo Proteinas', $ajus_obj_proteinas, '3');
-        $this->form->addField('Ajuste segun objetivo Gurdura', $ajus_obj_gorduras, '3');
+        $this->form->addField('Proteínas (g/kg)', $ajus_obj_proteinas, '3');
+        $this->form->addField('Gorduras (g/kg)', $ajus_obj_gorduras, '3');
+        $this->form->addField('Carbohidratos (calculado)', $ajus_obj_carbohidratos, '3');
 
         $this->form->addField('Refeição', $refeicao, '3');
         $this->form->addField('Tipo', $tipo, '3');
         $this->form->addField('Alimentos', $alimentos, '3');
         $this->form->addField('Quantidade', $quantidade, '3');
+        $this->form->addField('Observacão', $observacao, '10');
 
         // Botoes de accion
         $adicionar_item = new Action([$this, 'onAdiciona']);
@@ -109,7 +112,12 @@ class DietaForm extends Page
         $adicionar_item->setAjax(true);
         $adicionar_item->setProperty('id', 'btn_adicionar_item');
         $this->form->addAction('Adicionar Item', $adicionar_item);
+
         $this->form->addAction('Salvar Dieta', new Action([$this, 'onSave']));
+
+        $ir = new Action([$this, 'onIrPlanoAlimentar']);
+        $ir->setProperty('class', 'btn btn-success');
+        $this->form->addAction('Ver Dieta', $ir);
 
         // Configuración de la Datagrid
         $this->datagrid = new DatagridWrapper(new Datagrid);
@@ -140,8 +148,28 @@ class DietaForm extends Page
     }
 
     /**
+     * redirigir a la plano alimentar
+     */
+
+    public function onIrPlanoAlimentar()
+    {
+        $dadosObj = $this->form->getData();
+        if ($dadosObj) {
+            try {
+                // 5. Redirigimos a la página de la PlanoAlimentar
+                Page::pageDestino('PlanoAlimentar', 'showDieta', $dadosObj->id_atleta, $dadosObj->id_atleta,);
+            } catch (Exception $e) {
+                new Message('error', 'Errror ao ir no plano alimentar.');
+            }
+        }
+    }
+    /**
      * Calcula los totales consumidos en la lista de alimentos
      * y prepara los datos de comparación con las metas del atleta.
+     */
+/**
+     * Calcula os totais consumidos na lista de alimentos
+     * e compara com as metas calculadas do atleta.
      */
     private function calcularResumenNutricional($dados)
     {
@@ -149,32 +177,55 @@ class DietaForm extends Page
 
         $acc_calorias  = 0.0;
         $acc_proteinas = 0.0;
-        $acc_gorduras   = 0.0;
+        $acc_gorduras  = 0.0;
         $acc_carb      = 0.0;
 
-        // 1. Sumar todo lo que está actualmente en la DataGrid (Sesión)
+        // 1. Somar o que está acumulado na sessão/datagrid
         foreach ($list as $item) {
             $acc_calorias  += (float)($item->calorias ?? 0);
             $acc_proteinas += (float)($item->proteinas ?? 0);
-            $acc_gorduras   += (float)($item->gorduras ?? 0);
+            $acc_gorduras  += (float)($item->gorduras ?? 0);
             $acc_carb      += (float)($item->carbohidratos ?? 0);
         }
 
-        // 2. Extraer datos del formulario / sesión para calcular metas
+        // 2. Extrair dados
         $peso = (float)($dados->peso ?? 0);
-        $factor_prot = (float)($dados->ajus_obj_proteinas ?? 2.0); // Ejemplo: 2.0g por kg por defecto
-        $factor_gord = (float)($dados->ajus_obj_gorduras ?? 1.0);  // Ejemplo: 1.0g por kg por defecto
+        $tmt  = (float)($dados->tasa_metabolica ?? 0);
+        $ajuste_cal = (float)($dados->ajus_obj_consumo ?? 0);
 
-        // Metas en gramos
+        // Fatores g/kg
+        $factor_prot = (float)($dados->ajus_obj_proteinas ?? 2.0); // Padrão: 2.0 g/kg
+        $factor_gord = (float)($dados->ajus_obj_gorduras ?? 1.0);  // Padrão: 1.0 g/kg
+
+        // Metas Nutricionais
+        $meta_cal  = $tmt + $ajuste_cal;
         $meta_prot = $peso * $factor_prot;
         $meta_gord = $peso * $factor_gord;
-        $meta_cal  = (float)($dados->tasa_metabolica ?? 0) + (float)($dados->ajus_obj_consumo ?? 0);
 
-        // 3. Formatear cadenas explicativas para los inputs del formulario
+        // Sobra calórica para carbohidratos: 1g Prot = 4kcal, 1g Gord = 9kcal
+        $cal_prot = $meta_prot * 4;
+        $cal_gord = $meta_gord * 9;
+        $cal_restantes = $meta_cal - ($cal_prot + $cal_gord);
+
+        // 1g Carb = 4kcal
+        $meta_carb = ($cal_restantes > 0) ? ($cal_restantes / 4) : 0;
+
+        // 3. Atualizar os campos do formulário para exibição
+        $dados->ajus_obj_carbohidratos = number_format($meta_carb, 1, '.', '') . ' g (sobra)';
+
         $dados->tot_calorias  = sprintf("%.1f / %.1f kcal", $acc_calorias, $meta_cal);
-        $dados->tot_proteinas = sprintf("%.1f / %.1f g (%s)", $acc_proteinas, $meta_prot, ($acc_proteinas >= $meta_prot) ? 'OK' : 'Falta ' . number_format($meta_prot - $acc_proteinas, 1) . 'g');
-        $dados->tot_gorduras   = sprintf("%.1f / %.1f g (%s)", $acc_gorduras, $meta_gord, ($acc_gorduras >= $meta_gord) ? 'OK' : 'Falta ' . number_format($meta_gord - $acc_gorduras, 1) . 'g');
-        $dados->tot_carb      = sprintf("%.1f g acumulados", $acc_carb);
+        
+        $dados->tot_proteinas = sprintf("%.1f / %.1f g (%s)", 
+            $acc_proteinas, $meta_prot, 
+            ($acc_proteinas >= $meta_prot) ? 'OK' : 'Falta ' . number_format($meta_prot - $acc_proteinas, 1) . 'g');
+
+        $dados->tot_gorduras  = sprintf("%.1f / %.1f g (%s)", 
+            $acc_gorduras, $meta_gord, 
+            ($acc_gorduras >= $meta_gord) ? 'OK' : 'Falta ' . number_format($meta_gord - $acc_gorduras, 1) . 'g');
+
+        $dados->tot_carb      = sprintf("%.1f / %.1f g (%s)", 
+            $acc_carb, $meta_carb, 
+            ($acc_carb >= $meta_carb) ? 'OK' : 'Falta ' . number_format($meta_carb - $acc_carb, 1) . 'g');
     }
 
     /**
@@ -184,12 +235,11 @@ class DietaForm extends Page
     {
         try {
             $dados = $this->form->getData();
-
             // 1. Validaciones
             if (empty($dados->alimentos)) {
                 throw new Exception("Selecione um alimento da lista.");
             }
-            if ($dados->refeicao) {
+            if ($dados->refeicao == "") {
                 throw new Exception("Selecione uma refeiçao.");
             }
             if (empty($dados->quantidade) || (float)$dados->quantidade <= 0) {
@@ -206,7 +256,7 @@ class DietaForm extends Page
                 $session_key = $refeicao_id . '_' . $alimento_result->id;
 
                 // 2. Cálculos según unidad/gramos
-                if ($alimento_result->medida == 'unid') {
+                if ($alimento_result->medida == 'unid' or $alimento_result->medida == 'cds' or $alimento_result->medida == 'cdc') {
                     $calorias      = (float)$dados->quantidade * (float)$alimento_result->calorias;
                     $proteinas     = (float)$dados->quantidade * (float)$alimento_result->proteinas;
                     $gorduras      = (float)$dados->quantidade * (float)$alimento_result->gorduras;
@@ -226,10 +276,10 @@ class DietaForm extends Page
                 $item->nome          = $alimento_result->nome;
                 $item->quantidade    = $dados->quantidade;
                 $item->nome_refeicao = $nome_refeicao;
-                $item->calorias      = number_format($calorias, 2, '.', '');
-                $item->proteinas     = number_format($proteinas, 2, '.', '');
-                $item->gorduras      = number_format($gorduras, 2, '.', '');
-                $item->carbohidratos = number_format($carbohidratos, 2, '.', '');
+                $item->calorias      = $calorias;
+                $item->proteinas     = $proteinas;
+                $item->gorduras      = $gorduras;
+                $item->carbohidratos = $carbohidratos;
 
                 //pegar valores da sessão
                 $atleta_session = Session::getValue('atleta_dieta');
@@ -294,14 +344,20 @@ class DietaForm extends Page
 
     public function onSetDieta(array $param)
     {
+        
         $id = $param['id'] ?? null;
         $atleta_session = Session::getValue('atleta_dieta');
-
         if ($id) {
             try {
                 Transaction::open('livro');
-                $objetivo = new Objetivos($id);
-                if ($atleta_session) {
+                $repository = new Repository('ObjetivoAtleta');
+                $criteria = new Criteria;
+                $criteria->add('activo', '=', 1);
+                $criteria->add('atleta_id', '=', (int) $id);
+                $results = $repository->load($criteria);
+                if ($results) {
+                    $result = end($results);
+                    $objetivo = new Objetivos($result->objetivo_id);
                     $atleta_session->objetivo = $objetivo->descricao;
                 }
                 Transaction::close(); // <- Faltaba cerrar la transacción aquí
@@ -432,7 +488,7 @@ class DietaForm extends Page
             }
 
             $dieta = new Dieta;
-            $dieta->atleta_id       = $atleta->id_atleta ?? $dados->id_atleta;
+            $dieta->atleta_id       = $atleta_session->id_atleta ?? $dados->id_atleta;
             $dieta->peso = $dados->peso;
             $dieta->altura = $atleta_session->altura;
             $dieta->tasa_metabolica_total = $dados->tasa_metabolica;
@@ -458,7 +514,7 @@ class DietaForm extends Page
                 $itemDieta->store();
             }
 
-            //Session::setValue('list', []); // Limpiar sesión tras guardar
+            Session::freeSession();
             Transaction::close();
 
             new Message('info', 'Dieta salva com sucesso!');

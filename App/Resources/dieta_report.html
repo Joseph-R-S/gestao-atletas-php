@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Plano Alimentar</title>
+    <!-- Carga Bootstrap desde CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        /* Estilos aplicados EXCLUSIVAMENTE a las tablas y sus componentes */
+        table.table {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-collapse: collapse;
+            font-size: 12px;
+            page-break-inside: avoid;
+            /* Previene cortes raros entre páginas en Dompdf */
+        }
+
+        table.table th,
+        table.table td {
+            padding: 6px 8px !important;
+            vertical-align: middle;
+        }
+
+        /* Modificadores de color específicos para tablas */
+        table.table .table-primary {
+            background-color: #0d6efd !important;
+            color: #ffffff !important;
+        }
+
+        table.table .table-light {
+            background-color: #f8f9fa !important;
+        }
+
+        /* Clases de utilidad circunscritas al ámbito de las tablas */
+        table.table .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid p-2">
+        <!-- Encabezado Atleta -->
+        <div class="card mb-2">
+            <div style="padding: 15px; display: table; width: 100%; box-sizing: border-box;">
+                <!-- Columna Izquierda: Datos del Atleta -->
+                <div style="display: table-cell; vertical-align: middle; text-align: left;">
+                    <h3 style="margin: 0; color: #0d6efd;">{{ atleta.nome }}</h3>
+                    <p style="margin: 5px 0 0 0; color: #6c757d;">
+                        <strong>Objetivo:</strong> {{ objetivo_nome }} |
+                        <strong>Data criação:</strong> {{ data_criacao }}
+                    </p>
+                </div>
+
+                <!-- Columna Derecha: Insignias (Badges) -->
+                <div style="display: table-cell; vertical-align: middle; text-align: right; width: 180px;">
+                    <span class="badge bg-secondary">Peso: {{ peso ?? '-' }} kg</span>
+                    <span class="badge bg-secondary">Altura: {{ altura ?? '-' }} m</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Totales Globales -->
+        <table class="table table-bordered text-center mb-4">
+            <thead>
+                <tr class="table-light">
+                    <th>Calorias</th>
+                    <th>Proteínas</th>
+                    <th>Carboidratos</th>
+                    <th>Gorduras</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-bold text-primary">{{ totais.calorias|number_format(0) }} Kcal</td>
+                    <td class="fw-bold text-success">{{ totais.proteinas|number_format(1) }}g</td>
+                    <td class="fw-bold text-warning">{{ totais.carbohidratos|number_format(1) }}g</td>
+                    <td class="fw-bold text-danger">{{ totais.gorduras|number_format(1) }}g</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Comidas -->
+        {% for refeicao in dietas %}
+        <table class="table table-bordered mb-4">
+            <thead>
+                <tr class="table-primary">
+                    <th colspan="6" class="text-center" style="font-size: 14px;">
+                        {{ refeicao.nome_refeicao }}
+                    </th>
+                </tr>
+                <tr class="table-light">
+                    <th>Alimento</th>
+                    <th class="text-center" style="width: 15%;">Qtd</th>
+                    <th class="text-center" style="width: 12%;">Kcal</th>
+                    <th class="text-center" style="width: 12%;">Prot</th>
+                    <th class="text-center" style="width: 12%;">Carb</th>
+                    <th class="text-center" style="width: 12%;">Gord</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alimento in refeicao.alimentos %}
+                <tr>
+                    <td>
+                        <strong>{{ alimento.nome }}</strong>
+                        {% if alimento.observacao %}
+                        <br><small style="color: #6c757d;"><i>Obs: {{ alimento.observacao }}</i></small>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">{{ alimento.quantidade }} {{ alimento.unidade }}</td>
+                    <td class="text-center">{{ alimento.calorias ? alimento.calorias|number_format(0) : '-' }}</td>
+                    <td class="text-center">{{ alimento.proteinas ? alimento.proteinas|number_format(1) ~ 'g' : '-' }}
+                    </td>
+                    <td class="text-center">{{ alimento.carbohidratos ? alimento.carbohidratos|number_format(1) ~ 'g' :
+                        '-' }}</td>
+                    <td class="text-center">{{ alimento.gorduras ? alimento.gorduras|number_format(1) ~ 'g' : '-' }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="table-light fw-bold">
+                    <td colspan="2" class="text-end">Total da Refeição:</td>
+                    <td class="text-center text-primary">{{ refeicao.total_kcal|number_format(0) }}</td>
+                    <td class="text-center text-success">{{ refeicao.total_prot|number_format(1) }}g</td>
+                    <td class="text-center text-warning">{{ refeicao.total_carb|number_format(1) }}g</td>
+                    <td class="text-center text-danger">{{ refeicao.total_gord|number_format(1) }}g</td>
+                </tr>
+            </tfoot>
+        </table>
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>

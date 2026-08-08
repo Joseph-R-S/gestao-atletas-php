@@ -25,6 +25,7 @@ CREATE TABLE objetivo_atleta (
     descricao TEXT,
     prazo_meses INT,
     motivo TEXT,
+    activo BOOLEAN,
     data_objetivo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   
     CONSTRAINT fk_atleta FOREIGN KEY (atleta_id) REFERENCES atletas(id) ON DELETE CASCADE,
@@ -47,19 +48,6 @@ CREATE TABLE perfil_atleta (
     factor_actividad DECIMAL(5,2),
     data_perfil TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_medidas_atleta FOREIGN KEY (atleta_id) REFERENCES atletas(id) ON DELETE CASCADE
-);
-
-CREATE TABLE alimentos (
-    id SERIAL PRIMARY KEY,
-    tipo CHAR(1),
-    nome VARCHAR(50) NOT NULL,
-    porcao VARCHAR(2),
-    calorias DECIMAL(5,2),
-    proteinas DECIMAL(5,2),
-    gorduras DECIMAL(5,2),
-    carbohidratos DECIMAL(5,2),
-    fibra DECIMAL(5,2)
-    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE alimentos (
@@ -108,7 +96,7 @@ CREATE TABLE dieta_itens (
     proteinas DECIMAL(7,2) NOT NULL,             -- Proteínas calculadas
     gorduras DECIMAL(7,2) NOT NULL,              -- Grasas calculadas
     carbohidratos DECIMAL(7,2) NOT NULL,         -- Carbohidratos calculados
-    
+    observacao TEXT,                              -- Exemplo: 
     CONSTRAINT fk_dieta_itens_dieta FOREIGN KEY (dieta_id) REFERENCES dietas(id) ON DELETE CASCADE,
     CONSTRAINT fk_dieta_itens_alimento FOREIGN KEY (alimento_id) REFERENCES alimentos(id)
 );

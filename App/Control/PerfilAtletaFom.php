@@ -221,6 +221,7 @@ class PerfilAtletaFom extends Page
         $dadosObj = $this->form_medidas->getData();
         $atleta_id = $dadosObj->id ?? null;
         $atleta_session = Session::getValue('atleta_dieta');
+
         if ($atleta_id) {
             try {
                 Transaction::open('livro');
@@ -230,32 +231,21 @@ class PerfilAtletaFom extends Page
 
                 if (!$atleta) {
                     throw new Exception("Atleta não encontrado no sistema.");
-                } elseif ($atleta_session->id_atleta == $atleta->id) {
-                    Session::setValue('atleta_dieta', $atleta_session);
-                } else {
-                    // 2. Preparamos la estructura de sesión del atleta
+                }
+                // Si no hay sesión o es otro atleta, inicializamos el stdClass
+                if (!$atleta_session || ($atleta_session->id_atleta != $atleta->id)) {
                     $atleta_session = new \stdClass;
-                    $atleta_session->id_atleta         = $atleta->id;
-                    $atleta_session->nome              = $atleta->nome;
-                    $atleta_session->factor_actividade = $dadosObj->factor_actividad ?? null;
-                    $atleta_session->peso              = $dadosObj->peso ?? null;
-                    $atleta_session->altura            = $dadosObj->altura ?? null;
-
-                    // 3. Calculamos TMB/TMT si tenemos los datos completos
-                    if (!empty($dadosObj->peso) && !empty($dadosObj->altura) && !empty($dadosObj->factor_actividad)) {
-                        $data_nascimento = new DateTime($atleta->data_nascimento);
-                        $edad = $data_nascimento->diff(new DateTime('now'));
-
-                        $altura_scaled = PerfilAtleta::floatToIntScaled($dadosObj->altura);
-                        $tmb = PerfilAtleta::tasaMetabolicaBasal($dadosObj->peso, $altura_scaled, $edad, $atleta->sexo);
-                        $tmt = PerfilAtleta::tasaMetabolicaTotal($tmb, $dadosObj->factor_actividad);
-
-                        $atleta_session->tasa_metabolica = number_format((float)$tmt, 2, '.', '');
-                    } else {
-                        $atleta_session->tasa_metabolica = '0.00';
-                    }
+                    $atleta_session->id_atleta = $atleta->id;
+                    $atleta_session->nome      = $atleta->nome;
                 }
 
+                // 2. Preparamos la estructura de sesión del atleta
+                $atleta_session->factor_actividade = $dadosObj->factor_actividad;
+                $atleta_session->peso              = $dadosObj->peso ?? null;
+                $atleta_session->altura            = $dadosObj->altura ?? null;
+
+                // 3. Calculamos TMB/TMT si tenemos los datos completos
+                $this->setarAtleta($atleta->data_nascimento, $dadosObj->altura, $dadosObj->peso, $atleta->sexo, $atleta_session);
                 // 4. Guardamos en la sesión
                 Session::setValue('atleta_dieta', $atleta_session);
 
@@ -270,6 +260,18 @@ class PerfilAtletaFom extends Page
         } else {
             new Message('error', 'Selecione um atleta válido antes de montar a dieta.');
         }
+    }
+
+    public function setarAtleta($data_nascimento, $altura, $peso, $sexo, $atleta_session)
+    {
+        $data_nascimento = new DateTime($data_nascimento);
+        $edad = $data_nascimento->diff(new DateTime('now'));
+
+        $altura_scaled = PerfilAtleta::floatToIntScaled($altura);
+        $tmb = PerfilAtleta::tasaMetabolicaBasal($peso, $altura_scaled, $edad, $sexo);
+        $tmt = PerfilAtleta::tasaMetabolicaTotal($tmb, $atleta_session->factor_actividade);
+        $atleta_session->tasa_metabolica = number_format((float)$tmt, 2, '.', '');
+        Session::setValue('atleta_dieta', $atleta_session);
     }
 
     public function show()

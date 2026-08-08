@@ -7,12 +7,22 @@ class Alimentos extends Record
     const TABLENAME = 'alimentos';
 
     const PORCAO = [
-        'g' => 'gramas',
-        'ml' => 'minilitros',
-        'unid' => 'unidade'
+        'g'    => 'gramas',
+        'ml'   => 'mililitros',
+        'cdc'  => 'colher de chá',
+        'cds'  => 'colher de sopa', // Útil si más adelante agregas colher de sopa
+        'unid' => 'unidade',
     ];
 
-    const TIPO = ['p' => 'Proteina', 'c' => 'Carbohidrato', 'g' => 'Gordura', 'pv' => 'Proteina Vegetal', 'o' => 'Otro'];
+    const TIPO = [
+        'p' => 'Proteina',
+        'c' => 'Carbohidrato',
+        'g' => 'Gordura',
+        'f' => 'Fruta',
+        'v' => 'Vegetal',
+        's' => 'Salada',
+        'o' => 'Outro'
+    ];
 
     const REFEICOES = [
         '0' => 'Café da manhã',
