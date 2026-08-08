@@ -35,7 +35,7 @@ Logs do Sistema: Sistema de log automatizado para monitoramento de todas as cons
 Clone o repositório:
 
 Bash
-git clone https://github.com/seu-usuario/gestao_atletas.git
+git clone https://github.com/Joseph-R-S/gestao-atletas-php.git
 Instale as dependências:
 
 Bash
